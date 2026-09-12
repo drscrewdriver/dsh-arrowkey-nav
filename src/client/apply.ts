@@ -18,11 +18,18 @@ import {
   type WorkspacesReadFace,
 } from './navigate.ts';
 
-/** Exactly what `apply` needs; the plugin declares the matching injections. */
+/**
+ * Exactly what `apply` needs; the plugin declares the matching injections.
+ *
+ * `sessions`/`workspaces` are the two faces navigation resolves against; they
+ * are typed required but tolerated missing at runtime (see `handleArrowKey`).
+ * `uiWorkspace` is only the empty-workspace fallback and is optional: it is not
+ * in the inject list, and builds without it (0.1.1) lose just that fallback.
+ */
 export interface Plan {
   readonly sessions: SessionsFace;
   readonly workspaces: WorkspacesReadFace;
-  readonly uiWorkspace: UiWorkspaceFace;
+  readonly uiWorkspace?: UiWorkspaceFace;
 }
 
 /**
@@ -50,6 +57,11 @@ export function openWorkspace(plan: Plan, workspaceId: WorkspaceId, order?: read
   const newest = newestOf(rows, state);
   if (newest !== undefined) {
     plan.sessions.open(newest);
+    return;
+  }
+  if (plan.uiWorkspace === undefined) {
+    // No shipped connect face on this build: an empty workspace has nothing to
+    // land on, so the press resolves to nothing rather than inventing a session.
     return;
   }
   void plan.uiWorkspace.connectWorkspace(workspaceId)

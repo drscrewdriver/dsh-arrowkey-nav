@@ -1,15 +1,27 @@
 /**
  * Browser half of `dsh-arrowkey-nav`.
  *
- * Declares the three services the plugin reads, then owns one capturing
- * keydown listener for as long as the plugin is loaded. The details panel needs
- * no handling: the shipped frame closes it when the current session changes.
+ * Declares the services the plugin reads, then owns one capturing keydown
+ * listener for as long as the plugin is loaded. The details panel needs no
+ * handling: the shipped frame closes it when the current session changes.
+ *
+ * 0.1.1 note: the bundle-level `dsh.client.inject` is empty on this branch —
+ * 0.1.1 predates `dsh-api-session-controller` and ships a different client
+ * package generation — so the services are resolved through Cordis injection
+ * alone and every face is tolerated missing at runtime (the plugin degrades to
+ * inert rather than pending forever on a service name that does not exist).
  */
 import type { Plan } from './apply.ts';
 import { handleArrowKey, readNavState } from './session-nav.ts';
 
-/** Cordis service injections this plugin waits for. */
-export const inject = ['sessions', 'workspaces', 'uiWorkspace'];
+/**
+ * Cordis service injections this plugin waits for.
+ *
+ * `uiWorkspace` is deliberately not listed: it is only a fallback path (the
+ * blank-workspace connect) and may not exist on 0.1.1; waiting on it would
+ * leave the plugin PENDING forever. It is read opportunistically instead.
+ */
+export const inject = ['sessions', 'workspaces'];
 
 /** The Cordis context fields this plugin uses. */
 export interface PluginContext extends Plan {
@@ -36,6 +48,8 @@ export function apply(ctx: PluginContext): void {
     document.addEventListener('keydown', onKeyDown, true);
     // One line so a silent failure is never silent: if this does not appear,
     // the plugin never activated (a pending injection) and no key can work.
+    // A `false` flag means that service is missing on this DSH build: the
+    // listener stays attached but navigation stays inert (see handleArrowKey).
     console.info(
       'dsh-arrowkey-nav: listener attached',
       {

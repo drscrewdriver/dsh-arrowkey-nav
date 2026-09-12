@@ -105,6 +105,24 @@ npm run build       # regenerate lib/client.js after editing src/client
   `src/client/apply.ts` are the only files to revisit; a service that is gone
   leaves the plugin pending rather than failing the page.
 
+## Version compatibility
+
+This branch (`compat/0.1.1`) targets **DSH ≤ 0.1.1-rc.2** (the
+`dsh-client-runtime` generation).
+
+- `package.json → dsh.client.inject` is empty: 0.1.1 predates
+  `dsh-api-session-controller`, and declaring bundles that do not exist on this
+  generation risks breaking the client combo. Services are resolved through
+  Cordis injection (`sessions`, `workspaces`) alone.
+- `uiWorkspace` is not injected and is optional: on builds without it the
+  empty-workspace fallback is skipped (blank-first / newest-first still work).
+- If either snapshot service is missing at runtime the plugin stays attached
+  but inert, and every arrow press logs `services missing` — it never throws.
+- Live verification on 0.1.1-rc.2 is pending; run `diagnose-console.js` in the
+  web console and check `__dshArrowkeyNav.snapshot()` before first use.
+
+For DSH 0.1.5-rc.x, see the `compat/0.1.5-rc` branch.
+
 ## Layout
 
 ```

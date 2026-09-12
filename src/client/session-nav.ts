@@ -134,6 +134,18 @@ export function handleArrowKey(
 ): boolean {
   if (DELTA[event.key] === undefined) return false;
 
+  // A build without one of the two snapshots (an unexpected DSH generation) is
+  // inert rather than broken: the listener stays attached, every press is
+  // reported and ignored, and nothing throws.
+  if (plan.sessions === undefined || plan.workspaces === undefined) {
+    trace?.('services missing', {
+      key: event.key,
+      sessions: plan.sessions !== undefined,
+      workspaces: plan.workspaces !== undefined,
+    });
+    return false;
+  }
+
   const decision = decideIgnore(event);
   if (decision.ignore) {
     trace?.('ignored', { key: event.key, reason: decision.reason });
