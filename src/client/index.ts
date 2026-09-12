@@ -6,7 +6,7 @@
  * no handling: the shipped frame closes it when the current session changes.
  */
 import type { Plan } from './apply.ts';
-import { handleArrowKey } from './session-nav.ts';
+import { handleArrowKey, readNavState } from './session-nav.ts';
 
 /** Cordis service injections this plugin waits for. */
 export const inject = ['sessions', 'workspaces', 'uiWorkspace'];
@@ -49,6 +49,47 @@ export function apply(ctx: PluginContext): void {
       console.info('dsh-arrowkey-nav: listener removed');
     };
   }, 'dsh-arrowkey-nav: document keydown listener');
+
+  // Read-only diagnostic accessor for the console (see diagnose-console.js):
+  // the service snapshots live inside this closure, so a shape probe has to
+  // run from here. Removed with the plugin.
+  ctx.effect(() => {
+    (globalThis as Record<string, unknown>).__dshArrowkeyNav = {
+      snapshot: (): unknown => {
+        try {
+          const state = readNavState(ctx);
+          const rows = Object.values(state.list.byId);
+          const sample = rows[0];
+          return {
+            services: {
+              sessions: ctx.sessions !== undefined,
+              workspaces: ctx.workspaces !== undefined,
+              uiWorkspace: ctx.uiWorkspace !== undefined,
+            },
+            sessions: {
+              snapshotKeys: Object.keys(state.list),
+              rowKeys: sample === undefined ? [] : Object.keys(sample),
+              current: state.list.current,
+              phase: state.list.phase,
+              rowCount: rows.length,
+              sampleRow: sample,
+            },
+            workspaces: {
+              workspaceCount: state.items.length,
+              workspaceKeys: state.items[0] === undefined ? [] : Object.keys(state.items[0]),
+              archivedCount: state.archivedSessionIds.length,
+              sampleWorkspace: state.items[0],
+            },
+          };
+        } catch (error) {
+          return { error: String(error) };
+        }
+      },
+    };
+    return () => {
+      delete (globalThis as Record<string, unknown>).__dshArrowkeyNav;
+    };
+  }, 'dsh-arrowkey-nav: console diagnostic accessor');
 }
 
 /**
