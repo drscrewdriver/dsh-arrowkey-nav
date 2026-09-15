@@ -18,7 +18,7 @@ the press started, so typing can continue immediately.
 ## Install
 
 ```sh
-dsh plugin --profile web add E:\test\rewrite-agently\dsh-arrowkey-nav
+dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
 Restart the profile afterwards — a running instance does not hot-load a new
@@ -29,6 +29,11 @@ Confirm the row is in the composed tree:
 ```sh
 dsh web --dump-config | Select-String dsh-arrowkey-nav
 ```
+
+A local checkout can be registered instead with
+`dsh plugin --profile web add <absolute path to the checkout> -w`; see
+[INSTALL.md](./INSTALL.md) for the full guide, including upgrades, verification
+and removal.
 
 ### Remove
 
