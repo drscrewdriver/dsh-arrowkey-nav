@@ -44,7 +44,7 @@ dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 Install a specific version explicitly:
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
 ```
 
 The official CLI updates the profile dependency, the lockfile, and `dsh.profile.bundles` automatically. Do not add a manual YAML row.
@@ -55,7 +55,7 @@ The DSH runtime uses pnpm 11, whose `minimumReleaseAge` policy may block a fresh
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.0
+  - dsh-arrowkey-nav@0.1.1
 ```
 
 ## 2. Restart the profile and reload the page

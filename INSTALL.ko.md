@@ -46,7 +46,7 @@ dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 특정 버전을 명시적으로 설치:
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
 ```
 
 공식 CLI는 프로필 의존성, 잠금 파일, 그리고 `dsh.profile.bundles`를 자동으로 갱신합니다. 수동으로 YAML 행을 추가하지 마세요.
@@ -57,7 +57,7 @@ DSH 런타임은 pnpm 11을 사용하며, 그 `minimumReleaseAge` 정책이 갓 
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.0
+  - dsh-arrowkey-nav@0.1.1
 ```
 
 ## 2. 프로필 재시작 및 페이지 새로고침

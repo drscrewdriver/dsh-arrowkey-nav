@@ -1,6 +1,6 @@
 {
   "name": "dsh-arrowkey-nav",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Arrow-key navigation for the DSH Web GUI: Up/Down switch sessions inside the current workspace, Left/Right switch workspaces.",
   "type": "module",
   "main": "lib/index.js",

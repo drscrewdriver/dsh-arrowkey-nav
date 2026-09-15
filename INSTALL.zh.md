@@ -44,7 +44,7 @@ dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 显式安装指定版本：
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
 ```
 
 官方 CLI 会自动更新 profile 依赖、锁文件与 `dsh.profile.bundles`。不要手工添加 YAML 行。
@@ -55,7 +55,7 @@ DSH 运行时使用 pnpm 11，其 `minimumReleaseAge` 策略可能拦截刚发�
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.0
+  - dsh-arrowkey-nav@0.1.1
 ```
 
 ## 2. 重启 profile 并刷新页面

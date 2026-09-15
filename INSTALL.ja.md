@@ -51,7 +51,7 @@ dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 特定のバージョンを明示的にインストールする場合:
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
 ```
 
 公式 CLI はプロファイルの依存関係、ロックファイル、`dsh.profile.bundles` を自動的に
@@ -66,7 +66,7 @@ DSH ランタイムは pnpm 11 を使用しており、その `minimumReleaseAge
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.0
+  - dsh-arrowkey-nav@0.1.1
 ```
 
 ## 2. プロファイルを再起動してページをリロードする

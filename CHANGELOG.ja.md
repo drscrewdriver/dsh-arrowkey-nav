@@ -1,5 +1,18 @@
 # 変更履歴
 
+## 0.1.1
+
+### 修正
+
+- `types` と `exports["."].types` が、ビルドで生成されない `lib/types/index.d.ts` を指していました。このファイルはディスク上にも、公開済み 0.1.0 の tarball にも存在しなかったため、TypeScript の利用者は宣言を取得できませんでした。両方を、生成・同梱される `lib/index.d.ts` に向けました。
+- `engines` が存在せず、Node と DSH のバージョンがどちらも制限されていませんでした。両方を宣言しました。
+- `lib/` は gitignore されており、ビルドするフックもなかったため、クリーンなクローンからの公開ではコンパイル済み出力を含まない tarball が配布される状態でした。`prepublishOnly` フックを追加しました。
+
+### 追加
+
+- `dsh.plugin.json`、表示マニフェスト `screenshots.json`、および `repository` / `homepage` / `keywords`。
+- 日本語・韓国語の README と変更履歴、および英語・簡体字中国語・日本語・韓国語のインストールガイド。
+
 ## 0.1.0
 
 初回リリース: DSH Web GUI 向けの矢印キーナビゲーション。
