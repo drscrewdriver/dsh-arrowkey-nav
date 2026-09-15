@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.1
+
+### Fixed
+
+- `types` and `exports["."].types` pointed at `lib/types/index.d.ts`, which the build never emits — it was absent from disk and from the published 0.1.0 tarball, so TypeScript consumers received no declarations. Both now point at `lib/index.d.ts`, which is emitted and shipped.
+- `engines` was absent entirely, so neither the Node nor the DSH version was gated. Both are now declared.
+- `lib/` is gitignored and no hook built it, so a publish from a clean clone would have shipped a tarball with no compiled output at all. Added the `prepublishOnly` hook.
+
+### Added
+
+- `dsh.plugin.json`, the `screenshots.json` display manifest, and `repository` / `homepage` / `keywords`.
+- Japanese and Korean READMEs and changelogs, and the install guide in English, Simplified Chinese, Japanese and Korean.
+
 ## 0.1.0
 
 First release: arrow-key navigation for the DSH Web GUI.
