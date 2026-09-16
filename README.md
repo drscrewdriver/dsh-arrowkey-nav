@@ -15,6 +15,17 @@ neighbouring one; crossing is what `←`/`→` are for. After a switch the targe
 row is scrolled into view, and focus returns to the composer if that is where
 the press started, so typing can continue immediately.
 
+## Branches and DSH versions
+
+| Branch | DSH range | Status |
+| --- | --- | --- |
+| `master` | ~0.1.2 (original baseline) | verified at development time |
+| `compat/0.1.5-rc` | 0.1.5-alpha.1 – 0.1.5-rc.x | adaptation done on this branch; typecheck + 52/52 tests green here; live load evidence pending |
+| `compat/0.1.1` | ≤ 0.1.1-rc.2 (`dsh-client-runtime` generation) | defensive adaptation done; live verification pending |
+
+Install from the branch whose range covers your DSH build. `lib/` is committed
+on every branch, so a GitHub-based install needs no build step.
+
 ## Install
 
 ```sh

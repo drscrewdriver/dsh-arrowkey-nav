@@ -1,10 +1,14 @@
 {
   "name": "dsh-arrowkey-nav",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Arrow-key navigation for the DSH Web GUI: Up/Down switch sessions inside the current workspace, Left/Right switch workspaces.",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
+  "engines": {
+    "node": ">=22.6.0",
+    "dsh": ">=0.1.5-alpha.1 <0.2.0-0"
+  },
   "exports": {
     ".": {
       "types": "./lib/types/index.d.ts",
