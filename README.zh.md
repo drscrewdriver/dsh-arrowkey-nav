@@ -11,11 +11,23 @@ DSH Web GUI 的方向键导航。不必离开键盘即可切换会话：
 
 `↑`/`↓` 在工作区两端回绕，且绝不会跨入相邻工作区；跨区是 `←`/`→` 的职责。切换后目标行会滚动进入视野；若按键时焦点在输入框，焦点会回到输入框，可立即继续输入。
 
+## 分支与 DSH 版本
+
+| 分支 | DSH 范围 | 状态 |
+| --- | --- | --- |
+| `master` | ~0.1.2（最初的基线） | 开发时验证通过 |
+| `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | 本分支完成适配（控制台证据访问器 + 收窄 `engines.dsh`）；本分支 typecheck + 52/52 测试全绿；实机加载证据待补 |
+| `compat/0.1.1` | ≤ 0.1.1-rc.2（`dsh-client-runtime` 世代） | 防御性适配已完成；实机验证待补 |
+
+请从覆盖你所用 DSH 构建的那条分支安装。每条分支都入库了 `lib/`，因此 GitHub 直装无需构建步骤。
+
 ## 安装
 
 ```sh
-dsh plugin --profile web add dsh-arrowkey-nav -w
+dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc -w
 ```
+
+`#compat/0.1.5-rc` 即 DSH 0.1.5 线，也就是本分支；该分支已入库 `lib/`，GitHub 直装无需构建步骤。走 registry 的包（`dsh plugin --profile web add dsh-arrowkey-nav -w`）仍然是 `master` ~0.1.2 线。
 
 安装后需重启 profile —— 运行中的实例不会热加载新的 bundle 层。随后刷新 `http://127.0.0.1:3080`。
 
@@ -68,7 +80,7 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **收窄为导轨的侧边栏同样不会滚动**，原因相同：树未被挂载。切换仍然会发生。
 - **「单一列表」模式**没有工作区分区，但 `←`/`→` 仍按控制器的工作区顺序遍历，因此列表看起来可能在各分区之间跳动。
 - **滚动是尽力而为。** 任何查找失败都被吞掉：选中项已经移动，而缺失的行绝不能变成错误的行。
-- **钉在 dsh 0.1.2-rc.1。** `sessions` 与 `workspaces` 快照字段属于 pre-stable。若 dsh 升级改变了它们，只需回看 `src/client/navigate.ts` 与 `src/client/apply.ts`；某个服务消失时，本插件会保持 pending，而不会让页面报错。
+- **快照字段属于 pre-stable。** `sessions` 与 `workspaces` 的快照形状尚未稳定 —— 本分支是 DSH 0.1.5 线（`engines.dsh: >=0.1.5-alpha.1 <0.2.0-0`）。若 dsh 升级改变了它们，只需回看 `src/client/navigate.ts` 与 `src/client/apply.ts`；某个服务消失时，本插件会保持 pending，而不会让页面报错。
 
 ## 目录结构
 

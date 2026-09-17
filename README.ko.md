@@ -15,11 +15,23 @@ DSH 웹 GUI를 위한 화살표 키 내비게이션. 키보드에서 손을 떼�
 스크롤되고, 키 입력이 컴포저에서 시작되었다면 포커스가 컴포저로 돌아오므로 곧바로
 타이핑을 이어갈 수 있습니다.
 
+## 브랜치와 DSH 버전
+
+| 브랜치 | DSH 범위 | 상태 |
+| --- | --- | --- |
+| `master` | ~0.1.2 (최초 베이스라인) | 개발 시점에 검증됨 |
+| `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | 이 브랜치에서 적응 완료(콘솔 증거 접근자 + `engines.dsh` 축소). typecheck + 52/52 테스트 통과. 실기 로드 증거는 미확보 |
+| `compat/0.1.1` | ≤ 0.1.1-rc.2 (`dsh-client-runtime` 세대) | 방어적 적응 완료. 실기 검증 미실시 |
+
+사용 중인 DSH 빌드를 범위에 포함하는 브랜치에서 설치하세요. 모든 브랜치에 `lib/`가 커밋되어 있으므로 GitHub 설치에는 빌드 단계가 필요하지 않습니다.
+
 ## 설치
 
 ```sh
-dsh plugin --profile web add dsh-arrowkey-nav -w
+dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc -w
 ```
+
+`#compat/0.1.5-rc`는 DSH 0.1.5 라인(즉 이 브랜치)입니다. `lib/`가 커밋되어 있으므로 GitHub 설치에 빌드 단계가 필요하지 않습니다. 레지스트리 패키지(`dsh plugin --profile web add dsh-arrowkey-nav -w`)는 여전히 `master` ~0.1.2 라인입니다.
 
 이후 프로필을 재시작하세요. 실행 중인 인스턴스는 새로운 번들 레이어를 핫 로드하지
 않습니다. 그런 다음 `http://127.0.0.1:3080`을 새로고침하세요.
@@ -99,10 +111,10 @@ npm run build       # regenerate lib/client.js after editing src/client
   워크스페이스 순서를 순회하므로, 목록이 섹션 사이를 건너뛰는 것처럼 보일 수 있습니다.
 - **스크롤은 최선 노력 방식입니다.** 어떤 조회 실패든 삼켜집니다. 선택은 이미 이동했고,
   없는 행이 잘못된 행으로 바뀌어서는 안 되기 때문입니다.
-- **dsh 0.1.2-rc.1에 고정되었습니다.** `sessions`와 `workspaces` 스냅샷 필드는 아직
-  안정화 전입니다. dsh 업그레이드로 이들이 바뀌면 `src/client/navigate.ts`와
-  `src/client/apply.ts`가 다시 살펴볼 유일한 파일입니다. 사라진 서비스는 페이지를
-  실패시키지 않고 플러그인을 대기 상태로 남깁니다.
+- **스냅샷 필드는 아직 안정화 전입니다.** `sessions`와 `workspaces` 스냅샷 형태는 안정화 전이며,
+  이 브랜치는 DSH 0.1.5 라인입니다(`engines.dsh: >=0.1.5-alpha.1 <0.2.0-0`). dsh 업그레이드로
+  이들이 바뀌면 `src/client/navigate.ts`와 `src/client/apply.ts`가 다시 살펴볼 유일한 파일입니다.
+  사라진 서비스는 페이지를 실패시키지 않고 플러그인을 대기 상태로 남깁니다.
 
 ## 레이아웃
 

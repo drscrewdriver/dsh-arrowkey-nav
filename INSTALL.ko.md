@@ -21,9 +21,9 @@
 - `<profile>`: 수정할 DSH 프로필이며, 보통 `web`입니다;
 - `dsh-arrowkey-nav`: npm 패키지이자 런타임 플러그인 ID입니다.
 
-> **지원 DSH 범위: `>=0.1.2-rc.1 <0.2.0-0`.**
+> **지원 DSH 범위: `>=0.1.5-alpha.1 <0.2.0-0`.**
 >
-> README는 이 플러그인을 `dsh 0.1.2-rc.1`에 고정합니다. 이 플러그인이 읽는 `sessions`와 `workspaces` 스냅샷 필드는 아직 안정화 전입니다. 설치 전에 `dsh --version`으로 실행 중인 버전을 확인하세요.
+> 이 가이드는 `compat/0.1.5-rc` 브랜치 — DSH 0.1.5 라인 — 를 다룹니다. 이 플러그인이 읽는 `sessions`와 `workspaces` 스냅샷 필드는 아직 안정화 전이므로, 설치 전에 `dsh --version`으로 실행 중인 버전을 확인하세요. `master` 브랜치는 최초의 ~0.1.2 베이스라인(`>=0.1.2-rc.1`)입니다.
 
 ## 0. 사전 요구 사항과 프로필 탐색
 
@@ -38,12 +38,14 @@ ls "${DSH_HOME:-$HOME/.dsh}/profiles"
 ## 1. 공식 설치
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav -w
+dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc -w
 ```
 
 (`web`처럼 프로필이 pnpm 워크스페이스 루트인 경우 `-w` 플래그가 필요합니다.)
 
-특정 버전을 명시적으로 설치:
+`#compat/0.1.5-rc`는 DSH 0.1.5 라인(즉 이 브랜치)을 선택합니다. `lib/`가 커밋되어 있으므로 GitHub 설치에는 빌드 단계가 필요하지 않습니다. 대신 레지스트리에서 설치하면(`dsh plugin --profile <profile> add dsh-arrowkey-nav -w`) 게시된 `master` ~0.1.2 라인이 해석됩니다.
+
+특정 레지스트리 버전을 명시적으로 설치(`master` ~0.1.2 라인):
 
 ```bash
 dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w

@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — `compat/0.1.5-rc` (DSH 0.1.5 line)
+
+### Changed
+
+- `engines.dsh` narrowed to `>=0.1.5-alpha.1 <0.2.0-0` — the range this branch actually implements. `dsh.plugin.json` now carries the same range instead of the stale `>=0.1.2-rc.1` inherited from `master`.
+- Install docs point at `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc`; the registry package (`dsh-arrowkey-nav@0.1.1`) remains the `master` ~0.1.2 line, and the README/support-range statements were aligned with the manifest.
+
+### Added
+
+- Read-only console evidence accessor `globalThis.__dshArrowkeyNav.snapshot()` (`diagnose-console.js`), which reports the `sessions` / `workspaces` snapshot shapes the page actually loaded, so the 0.1.5 adaptation can be verified on a live host.
+
 ## 0.1.1
 
 ### Fixed

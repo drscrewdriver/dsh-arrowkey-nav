@@ -19,9 +19,9 @@ The placeholders in this guide are:
 - `<profile>`: the DSH profile to modify, usually `web`;
 - `dsh-arrowkey-nav`: the npm package and the runtime plugin ID.
 
-> **Supported DSH range: `>=0.1.2-rc.1 <0.2.0-0`.**
+> **Supported DSH range: `>=0.1.5-alpha.1 <0.2.0-0`.**
 >
-> The README pins this plugin to `dsh 0.1.2-rc.1`: the `sessions` and `workspaces` snapshot fields it reads are pre-stable. Check the running version with `dsh --version` before installing.
+> This guide documents the `compat/0.1.5-rc` branch — the DSH 0.1.5 line. The `sessions` and `workspaces` snapshot fields it reads are pre-stable, so check the running version with `dsh --version` before installing. The `master` branch is the original ~0.1.2 baseline (`>=0.1.2-rc.1`).
 
 ## 0. Prerequisites and profile discovery
 
@@ -36,12 +36,14 @@ Use the profile named by your running DSH process. `web` is common, but the acti
 ## 1. Official installation
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav -w
+dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc -w
 ```
 
 (the `-w` flag is required when the profile is a pnpm workspace root, as `web` is.)
 
-Install a specific version explicitly:
+The `#compat/0.1.5-rc` ref selects the DSH 0.1.5 line, which is what this branch is; `lib/` is committed on it, so a GitHub install needs no build step. Installing from the registry instead (`dsh plugin --profile <profile> add dsh-arrowkey-nav -w`) resolves to the published `master` ~0.1.2 line.
+
+Install a specific registry version explicitly (the `master` ~0.1.2 line):
 
 ```bash
 dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
@@ -51,7 +53,7 @@ The official CLI updates the profile dependency, the lockfile, and `dsh.profile.
 
 ### Supply-chain cooling period
 
-The DSH runtime uses pnpm 11, whose `minimumReleaseAge` policy may block a freshly published version with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`. Add the version to `minimumReleaseAgeExclude` in `~/.dsh/profiles/<profile>/pnpm-workspace.yaml`:
+Registry installs only. The DSH runtime uses pnpm 11, whose `minimumReleaseAge` policy may block a freshly published version with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`. Add the version to `minimumReleaseAgeExclude` in `~/.dsh/profiles/<profile>/pnpm-workspace.yaml`:
 
 ```yaml
 minimumReleaseAgeExclude:

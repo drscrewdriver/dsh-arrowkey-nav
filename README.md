@@ -20,7 +20,7 @@ the press started, so typing can continue immediately.
 | Branch | DSH range | Status |
 | --- | --- | --- |
 | `master` | ~0.1.2 (original baseline) | verified at development time |
-| `compat/0.1.5-rc` | 0.1.5-alpha.1 – 0.1.5-rc.x | adaptation done on this branch; typecheck + 52/52 tests green here; live load evidence pending |
+| `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | adaptation done on this branch (console evidence accessor + narrowed `engines.dsh`); typecheck + 52/52 tests green here; live load evidence pending |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2 (`dsh-client-runtime` generation) | defensive adaptation done; live verification pending |
 
 Install from the branch whose range covers your DSH build. `lib/` is committed
@@ -29,8 +29,12 @@ on every branch, so a GitHub-based install needs no build step.
 ## Install
 
 ```sh
-dsh plugin --profile web add dsh-arrowkey-nav -w
+dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc -w
 ```
+
+`#compat/0.1.5-rc` is the DSH 0.1.5 line, which is what this branch is. `lib/` is committed on it,
+so a GitHub install needs no build step. The registry package (`dsh plugin --profile web add
+dsh-arrowkey-nav -w`) is still the `master` ~0.1.2 line.
 
 Restart the profile afterwards — a running instance does not hot-load a new
 bundle layer. Then reload `http://127.0.0.1:3080`.
@@ -116,21 +120,11 @@ npm run build       # regenerate lib/client.js after editing src/client
   controller's workspace order, so the list may appear to jump between sections.
 - **Scrolling is best effort.** Any lookup failure is swallowed: the selection
   has already moved, and a missing row must never turn into a wrong one.
-- **Pinned to dsh 0.1.2-rc.1.** `sessions` and `workspaces` snapshot fields are
-  pre-stable. If a dsh upgrade changes them, `src/client/navigate.ts` and
+- **Snapshot fields are pre-stable.** `sessions` and `workspaces` snapshot shapes are
+  pre-stable — this branch is the DSH 0.1.5 line (`engines.dsh: >=0.1.5-alpha.1 <0.2.0-0`).
+  If a dsh upgrade changes them, `src/client/navigate.ts` and
   `src/client/apply.ts` are the only files to revisit; a service that is gone
   leaves the plugin pending rather than failing the page.
-
-## Branches and DSH versions
-
-| Branch | DSH range | Status |
-| --- | --- | --- |
-| `master` | ~0.1.2 (original baseline) | verified at development time |
-| `compat/0.1.5-rc` | 0.1.5-rc.x | adaptation in progress; live evidence pending |
-| `compat/0.1.1` | ≤ 0.1.1-rc.2 (`dsh-client-runtime` generation) | defensive adaptation done; live verification pending |
-
-Install from the branch whose range covers your DSH build. See each branch's
-README "Version compatibility" section for what changed and why.
 
 ## Layout
 

@@ -19,9 +19,9 @@
 - `<profile>`：要改动的 DSH profile，通常是 `web`；
 - `dsh-arrowkey-nav`：npm 包名，同时也是运行时插件 ID。
 
-> **支持的 DSH 范围：`>=0.1.2-rc.1 <0.2.0-0`。**
+> **支持的 DSH 范围：`>=0.1.5-alpha.1 <0.2.0-0`。**
 >
-> README 将本插件钉在 `dsh 0.1.2-rc.1`：它读取的 `sessions` 与 `workspaces` 快照字段属于 pre-stable。安装前先用 `dsh --version` 确认当前版本。
+> 本指南描述的是 `compat/0.1.5-rc` 分支 —— DSH 0.1.5 线。它读取的 `sessions` 与 `workspaces` 快照字段属于 pre-stable，安装前先用 `dsh --version` 确认当前版本。`master` 分支是最初的 ~0.1.2 基线（`>=0.1.2-rc.1`）。
 
 ## 0. 前置条件与 profile 探查
 
@@ -36,12 +36,14 @@ ls "${DSH_HOME:-$HOME/.dsh}/profiles"
 ## 1. 官方安装
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav -w
+dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc -w
 ```
 
 （当 profile 是 pnpm workspace 根时，如 `web`，`-w` 是必需的。）
 
-显式安装指定版本：
+`#compat/0.1.5-rc` 这个 ref 选中的是 DSH 0.1.5 线，也就是本分支；该分支已入库 `lib/`，所以 GitHub 直装无需构建步骤。若改从 registry 安装（`dsh plugin --profile <profile> add dsh-arrowkey-nav -w`），解析到的是已发布的 `master` ~0.1.2 线。
+
+显式安装指定 registry 版本（`master` ~0.1.2 线）：
 
 ```bash
 dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w

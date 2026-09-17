@@ -1,5 +1,16 @@
 # 変更履歴
 
+## 未リリース — `compat/0.1.5-rc`（DSH 0.1.5 ライン）
+
+### 変更
+
+- `engines.dsh` を `>=0.1.5-alpha.1 <0.2.0-0` に絞り込みました — このブランチが実際に実装している範囲です。`dsh.plugin.json` も `master` から引き継いだ古い `>=0.1.2-rc.1` ではなく同じ範囲を持ちます。
+- インストール手順は `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc` を指します。レジストリのパッケージ（`dsh-arrowkey-nav@0.1.1`）は引き続き `master` ~0.1.2 ラインであり、README と対応範囲の記述をマニフェストに揃えました。
+
+### 追加
+
+- 読み取り専用のコンソール証跡アクセサ `globalThis.__dshArrowkeyNav.snapshot()`（`diagnose-console.js`）。ページが実際に読み込んだ `sessions` / `workspaces` のスナップショット形状を報告し、0.1.5 適合を実機で検証できます。
+
 ## 0.1.1
 
 ### 修正

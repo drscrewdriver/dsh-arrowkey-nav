@@ -1,5 +1,16 @@
 # 변경 이력
 
+## 미출시 — `compat/0.1.5-rc` (DSH 0.1.5 라인)
+
+### 변경됨
+
+- `engines.dsh`를 `>=0.1.5-alpha.1 <0.2.0-0`으로 축소했습니다 — 이 브랜치가 실제로 구현하는 범위입니다. `dsh.plugin.json`도 `master`에서 물려받은 낡은 `>=0.1.2-rc.1` 대신 같은 범위를 가집니다.
+- 설치 안내는 `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc`를 가리킵니다. 레지스트리 패키지(`dsh-arrowkey-nav@0.1.1`)는 여전히 `master` ~0.1.2 라인이며, README와 지원 범위 서술을 매니페스트에 맞췄습니다.
+
+### 추가됨
+
+- 읽기 전용 콘솔 증거 접근자 `globalThis.__dshArrowkeyNav.snapshot()`(`diagnose-console.js`). 페이지가 실제로 로드한 `sessions` / `workspaces` 스냅샷 형태를 보고하므로 0.1.5 적응을 실기에서 검증할 수 있습니다.
+
 ## 0.1.1
 
 ### 수정됨
