@@ -76,5 +76,15 @@
   "devDependencies": {
     "typescript": "^5.6.0"
   },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-api-session-controller": ">=0.1.2-rc.1 <0.2.0-0",
+    "@deepseek-ai/dsh-api-workspace-controller": ">=0.1.2-rc.1 <0.2.0-0",
+    "@deepseek-ai/dsh-client-ui-workspace": ">=0.1.2-rc.1 <0.2.0-0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-api-session-controller": { "optional": true },
+    "@deepseek-ai/dsh-api-workspace-controller": { "optional": true },
+    "@deepseek-ai/dsh-client-ui-workspace": { "optional": true }
+  },
   "license": "MIT"
 }
