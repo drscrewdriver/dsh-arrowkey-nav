@@ -1,6 +1,6 @@
 {
   "name": "dsh-arrowkey-nav",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public",
@@ -58,7 +58,7 @@
   },
   "engines": {
     "node": ">=22.6.0",
-    "dsh": ">=0.1.5-alpha.1 <0.2.0-0"
+    "dsh": ">=0.1.5-alpha.1 <0.1.6-0"
   },
   "repository": {
     "type": "git",
@@ -77,9 +77,9 @@
     "typescript": "^5.6.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-api-session-controller": ">=0.1.5-alpha.1 <0.2.0-0",
-    "@deepseek-ai/dsh-api-workspace-controller": ">=0.1.5-alpha.1 <0.2.0-0",
-    "@deepseek-ai/dsh-client-ui-workspace": ">=0.1.5-alpha.1 <0.2.0-0"
+    "@deepseek-ai/dsh-api-session-controller": ">=0.1.5-alpha.1 <0.1.6-0",
+    "@deepseek-ai/dsh-api-workspace-controller": ">=0.1.5-alpha.1 <0.1.6-0",
+    "@deepseek-ai/dsh-client-ui-workspace": ">=0.1.5-alpha.1 <0.1.6-0"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/dsh-api-session-controller": { "optional": true },

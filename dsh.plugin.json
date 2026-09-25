@@ -1,7 +1,7 @@
 {
   "id": "dsh-arrowkey-nav",
   "name": "dsh-arrowkey-nav",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": {
     "en": "Arrow-key navigation for the DSH Web GUI: Up/Down switch sessions inside the current workspace, Left/Right switch workspaces. Identity comes from the client controllers, not the DOM, and arrow keys are yielded back to the composer whenever a draft is being edited.",
     "zh": "DSH Web GUI 的方向键导航：上/下在当前工作区内切换会话，左/右切换工作区。身份来自客户端控制器而非 DOM；编辑草稿时方向键交还给输入框。"
@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "engines": {
-    "dsh": ">=0.1.5-alpha.1 <0.2.0-0"
+    "dsh": ">=0.1.5-alpha.1 <0.1.6-0"
   },
   "components": {
     "host": "lib/index.js",
