@@ -238,9 +238,9 @@ export function composerDraftIsEmpty(): boolean {
 export function focusComposer(): void {
   try {
     // `document.querySelector` is typed as `Element`; focus lives on
-    // `HTMLElement`, so the narrowing is asserted here and re-checked at runtime
-    // rather than trusting an unchecked cast with an `any`.
-    const composer = document.querySelector(COMPOSER) as HTMLElement | null;
+    // `HTMLElement`, so the narrowing is declared via the type argument and
+    // re-checked at runtime rather than trusting an unchecked cast with an `any`.
+    const composer = document.querySelector<HTMLElement>(COMPOSER);
     if (composer === null) return;
     if (typeof composer.focus !== 'function') return;
     composer.focus({ preventScroll: true });

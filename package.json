@@ -1,10 +1,10 @@
 {
   "name": "dsh-arrowkey-nav",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public",
-    "tag": "dsh-0.1.5"
+    "tag": "dsh-0.1.7"
   },
   "description": "Arrow-key navigation for the DSH Web GUI: Up/Down switch sessions inside the current workspace, Left/Right switch workspaces.",
   "type": "module",
@@ -54,11 +54,12 @@
     "build": "node scripts/build-client.mjs",
     "prepublishOnly": "npm run build",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.client.json",
+    "lint": "eslint .",
     "test": "node --experimental-strip-types --no-warnings --test tests/navigate.test.ts tests/guard.test.ts tests/display-order.test.ts tests/bundle.test.ts"
   },
   "engines": {
     "node": ">=22.6.0",
-    "dsh": ">=0.1.5-alpha.1 <0.1.6-0"
+    "dsh": ">=0.1.7-rc.1 <0.1.8-0"
   },
   "repository": {
     "type": "git",
@@ -74,17 +75,27 @@
     "navigation"
   ],
   "devDependencies": {
-    "typescript": "^5.6.0"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.71.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-api-session-controller": ">=0.1.5-alpha.1 <0.1.6-0",
-    "@deepseek-ai/dsh-api-workspace-controller": ">=0.1.5-alpha.1 <0.1.6-0",
-    "@deepseek-ai/dsh-client-ui-workspace": ">=0.1.5-alpha.1 <0.1.6-0"
+    "@deepseek-ai/dsh-api-session-controller": ">=0.1.7-rc.1 <0.1.8-0",
+    "@deepseek-ai/dsh-api-workspace-controller": ">=0.1.7-rc.1 <0.1.8-0",
+    "@deepseek-ai/dsh-client-ui-workspace": ">=0.1.7-rc.1 <0.1.8-0"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-api-session-controller": { "optional": true },
-    "@deepseek-ai/dsh-api-workspace-controller": { "optional": true },
-    "@deepseek-ai/dsh-client-ui-workspace": { "optional": true }
+    "@deepseek-ai/dsh-api-session-controller": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-api-workspace-controller": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-workspace": {
+      "optional": true
+    }
   },
   "license": "MIT"
 }

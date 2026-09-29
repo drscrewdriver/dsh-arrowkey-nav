@@ -62,7 +62,7 @@ function loadBundle(doc) {
   };
   globalThis.document = doc;
   globalThis.requestAnimationFrame = () => 0;
-  // eslint-disable-next-line no-new-func -- the bundle is a script, by contract.
+  // The bundle is a script, by contract — it must evaluate as a global script.
   new Function(bundle)();
   const registration = registrations[0];
   return { id: registration.id, exports: registration.factory(() => { throw new Error('no require'); }) };

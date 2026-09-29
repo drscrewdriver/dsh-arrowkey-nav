@@ -20,6 +20,7 @@ the press started, so typing can continue immediately.
 | Branch | DSH range | Status |
 | --- | --- | --- |
 | `master` | ~0.1.2 (original baseline) | verified at development time |
+| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | metadata-only adaptation (0.1.7 detector suite D1–D11: zero hits); lint + typecheck + 52/52 tests green; published under the `dsh-0.1.7` dist-tag |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | adaptation done on this branch (console evidence accessor + narrowed `engines.dsh`); typecheck + 52/52 tests green here; live load evidence pending |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2 (`dsh-client-runtime` generation) | defensive adaptation done; live verification pending |
 
@@ -29,12 +30,13 @@ on every branch, so a GitHub-based install needs no build step.
 ## Install
 
 ```sh
-dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc -w
+dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7 -w
 ```
 
-`#compat/0.1.5-rc` is the DSH 0.1.5 line, which is what this branch is. `lib/` is committed on it,
-so a GitHub install needs no build step. The registry package (`dsh plugin --profile web add
-dsh-arrowkey-nav -w`) is still the `master` ~0.1.2 line.
+`#compat/0.1.7` is the DSH 0.1.7 line, which is what this branch is. `lib/` is committed on it,
+so a GitHub install needs no build step. The registry package installs by dist-tag
+(`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.1.7 -w`); a bare `dsh-arrowkey-nav`
+still resolves to `latest`, which lags this line.
 
 Restart the profile afterwards — a running instance does not hot-load a new
 bundle layer. Then reload `http://127.0.0.1:3080`.
@@ -121,7 +123,7 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **Scrolling is best effort.** Any lookup failure is swallowed: the selection
   has already moved, and a missing row must never turn into a wrong one.
 - **Snapshot fields are pre-stable.** `sessions` and `workspaces` snapshot shapes are
-  pre-stable — this branch is the DSH 0.1.5 line (`engines.dsh: >=0.1.5-alpha.1 <0.2.0-0`).
+  pre-stable — this branch is the DSH 0.1.7 line (`engines.dsh: >=0.1.7-rc.1 <0.1.8-0`).
   If a dsh upgrade changes them, `src/client/navigate.ts` and
   `src/client/apply.ts` are the only files to revisit; a service that is gone
   leaves the plugin pending rather than failing the page.

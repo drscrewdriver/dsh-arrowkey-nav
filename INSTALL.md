@@ -19,9 +19,9 @@ The placeholders in this guide are:
 - `<profile>`: the DSH profile to modify, usually `web`;
 - `dsh-arrowkey-nav`: the npm package and the runtime plugin ID.
 
-> **Supported DSH range: `>=0.1.5-alpha.1 <0.2.0-0`.**
+> **Supported DSH range: `>=0.1.7-rc.1 <0.1.8-0`.**
 >
-> This guide documents the `compat/0.1.5-rc` branch — the DSH 0.1.5 line. The `sessions` and `workspaces` snapshot fields it reads are pre-stable, so check the running version with `dsh --version` before installing. The `master` branch is the original ~0.1.2 baseline (`>=0.1.2-rc.1`).
+> This guide documents the `compat/0.1.7` branch — the DSH 0.1.7 line. The `sessions` and `workspaces` snapshot fields it reads are pre-stable, so check the running version with `dsh --version` before installing. The `master` branch is the original ~0.1.2 baseline (`>=0.1.2-rc.1`).
 
 ## 0. Prerequisites and profile discovery
 
@@ -36,12 +36,12 @@ Use the profile named by your running DSH process. `web` is common, but the acti
 ## 1. Official installation
 
 ```bash
-dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.5-rc -w
+dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7 -w
 ```
 
 (the `-w` flag is required when the profile is a pnpm workspace root, as `web` is.)
 
-The `#compat/0.1.5-rc` ref selects the DSH 0.1.5 line, which is what this branch is; `lib/` is committed on it, so a GitHub install needs no build step. Installing from the registry instead (`dsh plugin --profile <profile> add dsh-arrowkey-nav -w`) resolves to the published `master` ~0.1.2 line.
+The `#compat/0.1.7` ref selects the DSH 0.1.7 line, which is what this branch is; `lib/` is committed on it, so a GitHub install needs no build step. Installing from the registry instead, by dist-tag (`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.1.7 -w`), installs this line; a bare `dsh-arrowkey-nav` still resolves to `latest`.
 
 Install a specific registry version explicitly (the `master` ~0.1.2 line):
 

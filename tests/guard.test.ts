@@ -15,8 +15,8 @@ import { shouldIgnore } from '../src/client/session-nav.ts';
 
 /** The selectors the guard compares with. */
 const COMPOSER_SELECTOR = '[data-composer-input]';
-const EDITABLE = 'input, textarea, select, [contenteditable=""], [contenteditable="true"], [role="textbox"]';
-const OVERLAY = '[role="dialog"], [role="menu"], [role="listbox"], [aria-modal="true"]';
+const _EDITABLE = 'input, textarea, select, [contenteditable=""], [contenteditable="true"], [role="textbox"]';
+const _OVERLAY = '[role="dialog"], [role="menu"], [role="listbox"], [aria-modal="true"]';
 
 /** Build a node double that answers only the selectors it "matches". */
 function node(matches: readonly string[]): Element {

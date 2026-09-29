@@ -1,5 +1,16 @@
 # 변경 이력
 
+## 미출시 — `compat/0.1.7` (DSH 0.1.7 라인)
+
+### 변경
+
+- `peerDependencies`와 `engines.dsh`를 DSH 0.1.7 라인으로 재지정: `>=0.1.7-rc.1 <0.1.8-0` (package.json + dsh.plugin.json). 메타데이터만 변경했으며 읽기 전용 0.1.7 판정 스위트(D1–D11)는 전부 0건. 빌드·테스트 시 `@deepseek-ai/*` 모듈을 import하지 않는다.
+- 설치 문서는 `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7`을 가리킨다. 레지스트리에는 `dsh-0.1.7` dist-tag로 `0.3.3`을 게시.
+
+### 추가
+
+- ESLint flat config(src는 type-checked, tests는 recommended 베이스라인)와 `lint` npm script 추가. `npm run lint` 클린.
+
 ## 미출시 — `compat/0.1.5-rc` (DSH 0.1.5 라인)
 
 ### 변경됨

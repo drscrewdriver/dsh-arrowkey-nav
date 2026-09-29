@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — `compat/0.1.7` (DSH 0.1.7 line)
+
+### Changed
+
+- `peerDependencies` and `engines.dsh` re-targeted to the DSH 0.1.7 line: `>=0.1.7-rc.1 <0.1.8-0` (package.json + dsh.plugin.json). Metadata-only: the read-only 0.1.7 detector suite (D1–D11) reports zero hits, and this plugin imports no `@deepseek-ai/*` module at build or test time.
+- Install docs point at `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7`; the registry package ships under the `dsh-0.1.7` dist-tag as `0.3.3`.
+
+### Added
+
+- ESLint flat config (type-checked baseline for src, recommended baseline for tests) and a `lint` npm script; `npm run lint` is clean.
+
 ## Unreleased — `compat/0.1.5-rc` (DSH 0.1.5 line)
 
 ### Changed
