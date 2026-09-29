@@ -20,6 +20,7 @@ DSH 웹 GUI를 위한 화살표 키 내비게이션. 키보드에서 손을 떼�
 | 브랜치 | DSH 범위 | 상태 |
 | --- | --- | --- |
 | `master` | ~0.1.2 (최초 베이스라인) | 개발 시점에 검증됨 |
+| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 이 브랜치에서 메타데이터만 적응(0.2.0-rc.1 대 0.1.7 서비스 면 diff: 추가 필드뿐). lint + typecheck + 52/52 테스트 통과. `dsh-0.2.0` dist-tag로 게시 |
 | `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 이 브랜치에서 메타데이터만 적응(0.1.7 판정 스위트 D1–D11: 전부 0건). lint + typecheck + 52/52 테스트 통과. `dsh-0.1.7` dist-tag로 게시 |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | 이 브랜치에서 적응 완료(콘솔 증거 접근자 + `engines.dsh` 축소). typecheck + 52/52 테스트 통과. 실기 로드 증거는 미확보 |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2 (`dsh-client-runtime` 세대) | 방어적 적응 완료. 실기 검증 미실시 |
@@ -29,10 +30,10 @@ DSH 웹 GUI를 위한 화살표 키 내비게이션. 키보드에서 손을 떼�
 ## 설치
 
 ```sh
-dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7 -w
+dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
 ```
 
-`#compat/0.1.7`는 DSH 0.1.7 라인(즉 이 브랜치)입니다. `lib/`가 커밋되어 있으므로 GitHub 설치에 빌드 단계가 필요하지 않습니다. 레지스트리는 dist-tag로(`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.1.7 -w`). tag 없이 설치하면 `latest`로 해석됩니다.
+`#compat/0.2.0`는 DSH 0.2.0 라인(즉 이 브랜치)입니다. `lib/`가 커밋되어 있으므로 GitHub 설치에 빌드 단계가 필요하지 않습니다. 레지스트리는 dist-tag로(`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.2.0 -w`). tag 없이 설치하면 `latest`로 해석됩니다.
 
 이후 프로필을 재시작하세요. 실행 중인 인스턴스는 새로운 번들 레이어를 핫 로드하지
 않습니다. 그런 다음 `http://127.0.0.1:3080`을 새로고침하세요.
@@ -113,7 +114,7 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **스크롤은 최선 노력 방식입니다.** 어떤 조회 실패든 삼켜집니다. 선택은 이미 이동했고,
   없는 행이 잘못된 행으로 바뀌어서는 안 되기 때문입니다.
 - **스냅샷 필드는 아직 안정화 전입니다.** `sessions`와 `workspaces` 스냅샷 형태는 안정화 전이며,
-  이 브랜치는 DSH 0.1.7 라인입니다(`engines.dsh: >=0.1.7-rc.1 <0.1.8-0`). dsh 업그레이드로
+  이 브랜치는 DSH 0.2.0 라인입니다(`engines.dsh: >=0.2.0-rc.1 <0.2.1-0`). dsh 업그레이드로
   이들이 바뀌면 `src/client/navigate.ts`와 `src/client/apply.ts`가 다시 살펴볼 유일한 파일입니다.
   사라진 서비스는 페이지를 실패시키지 않고 플러그인을 대기 상태로 남깁니다.
 

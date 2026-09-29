@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — `compat/0.2.0` (DSH 0.2.0 line)
+
+### Changed
+
+- `peerDependencies` and `engines.dsh` re-targeted to the DSH 0.2.0 line: `>=0.2.0-rc.1 <0.2.1-0` (package.json + dsh.plugin.json). Metadata-only: every face this plugin reads (`sessions.list` snapshot, `WorkspaceSnapshot`/`WorkspaceView`, `uiWorkspace.connectWorkspace`) was diffed between the 0.1.7-rc.2 and 0.2.0-rc.1 declarations — additive fields only, nothing removed.
+- Install docs point at `github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0`; the registry package ships under the `dsh-0.2.0` dist-tag as `0.4.0`.
+
 ## Unreleased — `compat/0.1.7` (DSH 0.1.7 line)
 
 ### Changed

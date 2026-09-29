@@ -1,10 +1,10 @@
 {
   "name": "dsh-arrowkey-nav",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public",
-    "tag": "dsh-0.1.7"
+    "tag": "dsh-0.2.0"
   },
   "description": "Arrow-key navigation for the DSH Web GUI: Up/Down switch sessions inside the current workspace, Left/Right switch workspaces.",
   "type": "module",
@@ -59,7 +59,7 @@
   },
   "engines": {
     "node": ">=22.6.0",
-    "dsh": ">=0.1.7-rc.1 <0.1.8-0"
+    "dsh": ">=0.2.0-rc.1 <0.2.1-0"
   },
   "repository": {
     "type": "git",
@@ -82,9 +82,9 @@
     "typescript-eslint": "^8.71.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-api-session-controller": ">=0.1.7-rc.1 <0.1.8-0",
-    "@deepseek-ai/dsh-api-workspace-controller": ">=0.1.7-rc.1 <0.1.8-0",
-    "@deepseek-ai/dsh-client-ui-workspace": ">=0.1.7-rc.1 <0.1.8-0"
+    "@deepseek-ai/dsh-api-session-controller": ">=0.2.0-rc.1 <0.2.1-0",
+    "@deepseek-ai/dsh-api-workspace-controller": ">=0.2.0-rc.1 <0.2.1-0",
+    "@deepseek-ai/dsh-client-ui-workspace": ">=0.2.0-rc.1 <0.2.1-0"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/dsh-api-session-controller": {

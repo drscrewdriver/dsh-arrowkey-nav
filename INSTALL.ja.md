@@ -22,9 +22,9 @@
 - `<profile>`: 変更対象の DSH プロファイル。通常は `web`。
 - `dsh-arrowkey-nav`: npm パッケージ名であり、実行時プラグイン ID。
 
-> **対応 DSH 範囲: `>=0.1.7-rc.1 <0.1.8-0`。**
+> **対応 DSH 範囲: `>=0.2.0-rc.1 <0.2.1-0`。**
 >
-> このガイドが扱うのは `compat/0.1.7` ブランチ — DSH 0.1.7 ラインです。読み取る
+> このガイドが扱うのは `compat/0.2.0` ブランチ — DSH 0.2.0 ラインです。読み取る
 > `sessions` と `workspaces` のスナップショットフィールドが安定前なので、インストール前に
 > `dsh --version` で実行中のバージョンを確認してください。`master` ブランチは当初の
 > ~0.1.2 ベースライン（`>=0.1.2-rc.1`）です。
@@ -43,15 +43,15 @@ ls "${DSH_HOME:-$HOME/.dsh}/profiles"
 ## 1. 公式インストール
 
 ```bash
-dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7 -w
+dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
 ```
 
 (プロファイルが pnpm ワークスペースルートである場合 — `web` がそうですが — `-w`
 フラグが必要です。)
 
-`#compat/0.1.7` は DSH 0.1.7 ライン（= このブランチ）を選びます。`lib/` はコミット
+`#compat/0.2.0` は DSH 0.2.0 ライン（= このブランチ）を選びます。`lib/` はコミット
 済みなので GitHub インストールにビルド手順は不要です。代わりにレジストリから
-インストールする場合（`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.1.7 -w`）は、
+インストールする場合（`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`）は、
 このラインが導入されます。tag なしの指定は `latest` に解決されます。
 
 特定のレジストリ版を明示的にインストールする場合（`master` ~0.1.2 ライン）:

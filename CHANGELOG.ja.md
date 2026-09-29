@@ -1,5 +1,12 @@
 # 変更履歴
 
+## 未リリース — `compat/0.2.0`（DSH 0.2.0 ライン）
+
+### 変更
+
+- `peerDependencies` と `engines.dsh` を DSH 0.2.0 ラインへ付け替え：`>=0.2.0-rc.1 <0.2.1-0`（package.json + dsh.plugin.json）。メタデータのみの変更で、本プラグインが読む全サービス面（`sessions.list` スナップショット、`WorkspaceSnapshot`/`WorkspaceView`、`uiWorkspace.connectWorkspace`）を 0.1.7-rc.2 と 0.2.0-rc.1 の宣言で差分確認 — 追加フィールドのみで削除はなし。
+- インストール手順は `github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0` を参照。レジストリは `dsh-0.2.0` dist-tag で `0.4.0` を公開。
+
 ## 未リリース — `compat/0.1.7`（DSH 0.1.7 ライン）
 
 ### 変更

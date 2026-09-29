@@ -20,6 +20,7 @@ DSH Web GUI 向けの矢印キーナビゲーション。キーボードから�
 | ブランチ | DSH 範囲 | 状態 |
 | --- | --- | --- |
 | `master` | ~0.1.2（当初のベースライン） | 開発時に検証済み |
+| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | このブランチでメタデータのみ適合（0.2.0-rc.1 と 0.1.7 のサービス面差分：追加フィールドのみ）。lint + typecheck + 52/52 テストグリーン。`dsh-0.2.0` dist-tag で公開 |
 | `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | このブランチでメタデータのみ適合（0.1.7 判定スイート D1–D11：ゼロヒット）。lint + typecheck + 52/52 テストグリーン。`dsh-0.1.7` dist-tag で公開 |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | このブランチで適合作業済み（コンソール証跡アクセサ + `engines.dsh` の絞り込み）。typecheck + 52/52 テストがグリーン。実機ロードの証跡は未取得 |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2（`dsh-client-runtime` 世代） | 防御的適合は完了。実機検証は未実施 |
@@ -29,10 +30,10 @@ DSH Web GUI 向けの矢印キーナビゲーション。キーボードから�
 ## インストール
 
 ```sh
-dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7 -w
+dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
 ```
 
-`#compat/0.1.7` は DSH 0.1.7 ライン（= このブランチ）です。`lib/` がコミット済みなので GitHub インストールにビルド手順は不要です。レジストリは dist-tag 指定で（`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.1.7 -w`）。tag なしの指定は `latest` に解決されます。
+`#compat/0.2.0` は DSH 0.2.0 ライン（= このブランチ）です。`lib/` がコミット済みなので GitHub インストールにビルド手順は不要です。レジストリは dist-tag 指定で（`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.2.0 -w`）。tag なしの指定は `latest` に解決されます。
 
 その後にプロファイルを再起動してください。実行中のインスタンスは新しい
 バンドルレイヤーをホットロードしません。その後 `http://127.0.0.1:3080` を
@@ -122,7 +123,7 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **スクロールはベストエフォートです。** 検索の失敗はすべて握りつぶされます:
   選択は既に移動しており、行が見つからないことが誤った行になることは決して
   あってはならないからです。
-- **スナップショットフィールドは安定前です。** `sessions` と `workspaces` のスナップショット形状は安定前であり、このブランチは DSH 0.1.7 ラインです（`engines.dsh: >=0.1.7-rc.1 <0.1.8-0`）。dsh のアップグレードでこれらが変わった場合に見直すファイルは `src/client/navigate.ts` と `src/client/apply.ts` だけです。サービスが存在しなくなった場合は、ページを失敗させるのではなくプラグインがペンディングのままになります。
+- **スナップショットフィールドは安定前です。** `sessions` と `workspaces` のスナップショット形状は安定前であり、このブランチは DSH 0.2.0 ラインです（`engines.dsh: >=0.2.0-rc.1 <0.2.1-0`）。dsh のアップグレードでこれらが変わった場合に見直すファイルは `src/client/navigate.ts` と `src/client/apply.ts` だけです。サービスが存在しなくなった場合は、ページを失敗させるのではなくプラグインがペンディングのままになります。
 
 ## レイアウト
 

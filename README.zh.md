@@ -16,6 +16,7 @@ DSH Web GUI 的方向键导航。不必离开键盘即可切换会话：
 | 分支 | DSH 范围 | 状态 |
 | --- | --- | --- |
 | `master` | ~0.1.2（最初的基线） | 开发时验证通过 |
+| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 本分支完成元数据适配（0.2.0-rc.1 与 0.1.7 服务面对比：纯增量字段）；lint + typecheck + 52/52 测试全绿；以 `dsh-0.2.0` dist-tag 发布 |
 | `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 本分支完成元数据适配（0.1.7 判定套件 D1–D11：零命中）；lint + typecheck + 52/52 测试全绿；以 `dsh-0.1.7` dist-tag 发布 |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | 本分支完成适配（控制台证据访问器 + 收窄 `engines.dsh`）；本分支 typecheck + 52/52 测试全绿；实机加载证据待补 |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2（`dsh-client-runtime` 世代） | 防御性适配已完成；实机验证待补 |
@@ -25,10 +26,10 @@ DSH Web GUI 的方向键导航。不必离开键盘即可切换会话：
 ## 安装
 
 ```sh
-dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7 -w
+dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
 ```
 
-`#compat/0.1.7` 即 DSH 0.1.7 线，也就是本分支；该分支已入库 `lib/`，GitHub 直装无需构建步骤。走 registry 请用 dist-tag（`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.1.7 -w`）；不带 tag 的裸安装仍解析到 `latest`。
+`#compat/0.2.0` 即 DSH 0.2.0 线，也就是本分支；该分支已入库 `lib/`，GitHub 直装无需构建步骤。走 registry 请用 dist-tag（`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.2.0 -w`）；不带 tag 的裸安装仍解析到 `latest`。
 
 安装后需重启 profile —— 运行中的实例不会热加载新的 bundle 层。随后刷新 `http://127.0.0.1:3080`。
 
@@ -81,7 +82,7 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **收窄为导轨的侧边栏同样不会滚动**，原因相同：树未被挂载。切换仍然会发生。
 - **「单一列表」模式**没有工作区分区，但 `←`/`→` 仍按控制器的工作区顺序遍历，因此列表看起来可能在各分区之间跳动。
 - **滚动是尽力而为。** 任何查找失败都被吞掉：选中项已经移动，而缺失的行绝不能变成错误的行。
-- **快照字段属于 pre-stable。** `sessions` 与 `workspaces` 的快照形状尚未稳定 —— 本分支是 DSH 0.1.7 线（`engines.dsh: >=0.1.7-rc.1 <0.1.8-0`）。若 dsh 升级改变了它们，只需回看 `src/client/navigate.ts` 与 `src/client/apply.ts`；某个服务消失时，本插件会保持 pending，而不会让页面报错。
+- **快照字段属于 pre-stable。** `sessions` 与 `workspaces` 的快照形状尚未稳定 —— 本分支是 DSH 0.2.0 线（`engines.dsh: >=0.2.0-rc.1 <0.2.1-0`）。若 dsh 升级改变了它们，只需回看 `src/client/navigate.ts` 与 `src/client/apply.ts`；某个服务消失时，本插件会保持 pending，而不会让页面报错。
 
 ## 目录结构
 
