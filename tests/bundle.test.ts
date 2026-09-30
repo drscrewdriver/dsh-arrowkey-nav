@@ -4,7 +4,7 @@
  *
  * This covers the contract the source tests cannot: the bundle registers a
  * factory under the package id, its `apply` is callable, and the listener it
- * installs actually reaches `sessions.open`.
+ * installs actually reaches `uiWorkspace.openSession`.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -68,33 +68,47 @@ function loadBundle(doc) {
   return { id: registration.id, exports: registration.factory(() => { throw new Error('no require'); }) };
 }
 
-/** Build the two service faces the plugin reads. */
+/** Build the service faces the plugin reads, in the real host shape. */
 function services() {
   const calls = [];
-  // Keyed by session id, as the real list snapshot is, and every row carries the
-  // identity the drawn-order lookup reads.
+  // Host-shape rows: every summary carries `retainedBy`, and exactly one row
+  // has `mainView > 0` — that is how the host marks the selected session. The
+  // list snapshot has NO `current` field; the plugin must derive it.
   const byId = {
-    's-1': { id: 's-1', displayTitle: 'one', updatedAt: 0 },
-    's-2': { id: 's-2', displayTitle: 'two', updatedAt: 0 },
-    's-3': { id: 's-3', displayTitle: 'three', updatedAt: 0 },
-    's-4': { id: 's-4', displayTitle: 'four', updatedAt: 0 },
+    's-1': { id: 's-1', displayTitle: 'one', updatedAt: 0, retainedBy: {} },
+    's-2': { id: 's-2', displayTitle: 'two', updatedAt: 0, retainedBy: { mainView: 1 } },
+    's-3': { id: 's-3', displayTitle: 'three', updatedAt: 0, retainedBy: {} },
+    's-4': { id: 's-4', displayTitle: 'four', updatedAt: 0, retainedBy: {} },
   };
-  const list = { current: 's-2', phase: 'ready', byId };
+  const list = { ids: ['s-1', 's-2', 's-3', 's-4'], phase: 'ready', byId };
   const items = [
     { workspaceId: 'w-a', path: 'E:\\a', sessionIds: ['s-1', 's-2', 's-3'] },
     { workspaceId: 'w-b', path: 'E:\\b', sessionIds: ['s-4'] },
   ];
+  /**
+   * Mirror `uiWorkspace.replaceMain`: release the previous mainView retention
+   * and retain the new one, synchronously, so the next press derives the new
+   * current exactly as it does against the real host.
+   */
+  function selectMainView(id) {
+    for (const key of Object.keys(byId)) {
+      byId[key] = { ...byId[key], retainedBy: key === id ? { mainView: 1 } : {} };
+    }
+  }
   return {
     calls,
+    byId,
     list,
+    selectMainView,
     sessions: {
       list: { getSnapshot: () => list },
-      open: (id) => { calls.push(['open', id]); list.current = id; },
+      // NB: no `open` — ISessions has not had one since the 0.1.7/0.2.0 break.
     },
     workspaces: {
       list: { getSnapshot: () => ({ items, archivedSessionIds: [], phase: 'ready' }) },
     },
     uiWorkspace: {
+      openSession: (target) => { calls.push(['openSession', target]); selectMainView(target); },
       connectWorkspace: (workspaceId) => { calls.push(['connect', workspaceId]); return Promise.resolve('created'); },
     },
   };
@@ -140,17 +154,17 @@ test('ArrowDown opens the next session in the current workspace', () => {
   const s = services();
   mount(doc, s);
   const event = doc.keydown('ArrowDown');
-  assert.deepEqual(s.calls, [['open', 's-3']]);
+  assert.deepEqual(s.calls, [['openSession', 's-3']]);
   assert.equal(event.defaultPrevented, true);
 });
 
 test('ArrowUp opens the previous session and wraps at the start', () => {
   const doc = fakeDocument();
   const s = services();
-  s.list.current = 's-1';
+  s.selectMainView('s-1');
   mount(doc, s);
   doc.keydown('ArrowUp');
-  assert.deepEqual(s.calls, [['open', 's-3']]);
+  assert.deepEqual(s.calls, [['openSession', 's-3']]);
 });
 
 test('ArrowRight enters the next workspace through its session', () => {
@@ -158,13 +172,13 @@ test('ArrowRight enters the next workspace through its session', () => {
   const s = services();
   mount(doc, s);
   doc.keydown('ArrowRight');
-  assert.deepEqual(s.calls, [['open', 's-4']]);
+  assert.deepEqual(s.calls, [['openSession', 's-4']]);
 });
 
 test('a no-op move consumes nothing', () => {
   const doc = fakeDocument();
   const s = services();
-  s.list.current = 's-4';
+  s.selectMainView('s-4');
   mount(doc, s);
   const event = doc.keydown('ArrowDown');
   assert.deepEqual(s.calls, []);
@@ -197,7 +211,7 @@ test('an empty composer yields its arrow keys, so navigation happens', () => {
   doc.composerText = '';
   mount(doc, s);
   doc.keydown('ArrowDown', { target: doc.composer });
-  assert.deepEqual(s.calls, [['open', 's-3']]);
+  assert.deepEqual(s.calls, [['openSession', 's-3']]);
 });
 
 test('a composer holding a draft keeps its arrow keys', () => {
@@ -229,4 +243,41 @@ test('a throwing snapshot does not escape the listener', () => {
   };
   mount(doc, s);
   assert.doesNotThrow(() => { doc.keydown('ArrowDown'); });
+});
+
+test('no mainView-retained row degrades to no session move but keeps workspace walk', () => {
+  const doc = fakeDocument();
+  const s = services();
+  // Zero current: the host has nothing retained by the main view.
+  for (const key of Object.keys(s.byId)) s.byId[key] = { ...s.byId[key], retainedBy: {} };
+  mount(doc, s);
+  const down = doc.keydown('ArrowDown');
+  assert.deepEqual(s.calls, []);
+  assert.equal(down.defaultPrevented, false);
+  // With no position in the order, ArrowRight enters at the first workspace.
+  doc.keydown('ArrowRight');
+  assert.deepEqual(s.calls, [['openSession', 's-1']]);
+});
+
+test('a row missing retainedBy entirely does not throw', () => {
+  const doc = fakeDocument();
+  const s = services();
+  const { retainedBy: _drop, ...rest } = s.byId['s-1'];
+  s.byId['s-1'] = rest;
+  mount(doc, s);
+  assert.doesNotThrow(() => { doc.keydown('ArrowDown'); });
+  assert.deepEqual(s.calls, [['openSession', 's-3']]);
+});
+
+test('openSession synchronously moves mainView so the next press derives the new current', () => {
+  const doc = fakeDocument();
+  const s = services();
+  mount(doc, s);
+  doc.keydown('ArrowDown'); // s-2 -> s-3
+  assert.deepEqual(s.calls, [['openSession', 's-3']]);
+  assert.equal(s.byId['s-3'].retainedBy.mainView, 1);
+  assert.equal(s.byId['s-2'].retainedBy.mainView, undefined);
+  s.calls.length = 0;
+  doc.keydown('ArrowDown'); // s-3 -> s-1 (wrap), derived from the moved mainView
+  assert.deepEqual(s.calls, [['openSession', 's-1']]);
 });

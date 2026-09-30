@@ -23,8 +23,8 @@ continuer immédiatement.
 | Branche | Plage DSH | État |
 | --- | --- | --- |
 | `master` | ~0.1.2 (ligne de base d'origine) | vérifiée au moment du développement |
-| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | adaptation des seules métadonnées sur cette branche (comparaison des surfaces 0.2.0-rc.1 et 0.1.7 : champs strictement additifs) ; lint + typecheck + 52/52 tests au vert ; publiée sous le dist-tag `dsh-0.2.0` |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | adaptation des seules métadonnées (suite de détection 0.1.7 D1–D11 : zéro résultat) ; lint + typecheck + 52/52 tests au vert ; publiée sous le dist-tag `dsh-0.1.7` |
+| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 0.4.1 restaure la navigation à la flèche cassée par la suppression de deux API de l'hôte (`ISessions.open`, `SessionListState.current`) ; l'affirmation précédente « adaptation des seules métadonnées » était erronée ; lint + typecheck + 60/60 tests au vert ; publiée sous le dist-tag `dsh-0.2.0` |
+| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 applique la même correction sur la ligne 0.1.7 ; lint + typecheck + 60/60 tests au vert ; publiée sous le dist-tag `dsh-0.1.7` |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | adaptation réalisée sur cette branche (accesseur d'évidence console + resserrage de `engines.dsh`) ; typecheck + 52/52 tests au vert sur cette branche ; évidence de chargement réel en attente |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2 (génération `dsh-client-runtime`) | adaptation défensive réalisée ; vérification réelle en attente |
 
@@ -75,7 +75,7 @@ L'identité provient des deux contrôleurs clients, jamais du DOM : les lignes n
 portent ni `data-*` ni `id`, on ne peut donc pas demander à une ligne de quelle
 session il s'agit.
 
-- `ctx.sessions.open(id)` effectue chaque changement. Le panneau de détails ne
+- `ctx.uiWorkspace.openSession(id)` effectue chaque changement. Le panneau de détails ne
   demande aucun traitement : le cadre fourni le referme déjà quand la session
   courante change.
 - `ctx.workspaces.list.getSnapshot()` fournit l'ordre des espaces de travail —

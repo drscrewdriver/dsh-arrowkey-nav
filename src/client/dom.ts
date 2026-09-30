@@ -6,6 +6,15 @@
  *
  * Every lookup is total: a missing anchor, a collapsed group, a rail-collapsed
  * sidebar, or an ambiguous binding all resolve to "no scroll", never to a guess.
+ *
+ * Known degradation (DSH 0.2.0 hosts, non-blocking): unnamed and blank rows are
+ * drawn with a localized label ("Untitled" / "New Session") that no longer equals
+ * `displayTitle` (title -> cwd basename -> id). A group containing such a row
+ * fails the label multiset match, so `displayOrder` safely falls back to the
+ * controller order for that workspace: arrow navigation still works, but Up/Down
+ * order may differ slightly from what is drawn, and `scrollToRow` silently skips
+ * those rows. Fixing it exactly would couple this file to the host's locale
+ * dictionary, which the client purity gate forbids; deliberately not done here.
  */
 import { COMPOSER, ROW, SIDEBAR_SCOPE, TREE } from './constants.ts';
 import type { NavState, SessionId, Target, WorkspaceId, WorkspaceView } from './navigate.ts';

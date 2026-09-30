@@ -22,8 +22,8 @@ comenzó la pulsación, de modo que se puede seguir escribiendo de inmediato.
 | Rama | Rango de DSH | Estado |
 | --- | --- | --- |
 | `master` | ~0.1.2 (línea base original) | verificada en su momento de desarrollo |
-| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | adaptación solo de metadatos en esta rama (cotejo de las superficies de 0.2.0-rc.1 y 0.1.7: solo campos aditivos); lint + typecheck + 52/52 pruebas en verde; publicada con el dist-tag `dsh-0.2.0` |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | adaptación solo de metadatos (suite de detectores 0.1.7 D1–D11: cero casos); lint + typecheck + 52/52 pruebas en verde; publicada con el dist-tag `dsh-0.1.7` |
+| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 0.4.1 restaura la navegación con flechas rota por la eliminación de dos API del host (`ISessions.open`, `SessionListState.current`); la afirmación anterior «adaptación solo de metadatos» era errónea; lint + typecheck + 60/60 pruebas en verde; publicada con el dist-tag `dsh-0.2.0` |
+| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 aplica la misma corrección en la línea 0.1.7; lint + typecheck + 60/60 pruebas en verde; publicada con el dist-tag `dsh-0.1.7` |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | adaptación hecha en esta rama (accesor de evidencias de consola + estrechamiento de `engines.dsh`); typecheck + 52/52 pruebas en verde en esta rama; evidencia de carga en vivo pendiente |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2 (generación `dsh-client-runtime`) | adaptación defensiva hecha; verificación en vivo pendiente |
 
@@ -73,7 +73,7 @@ La identidad viene de los dos controladores de cliente, nunca del DOM: las filas
 no llevan ni `data-*` ni `id`, así que no se puede preguntar a una fila qué
 sesión es.
 
-- `ctx.sessions.open(id)` realiza cada cambio. El panel de detalles no necesita
+- `ctx.uiWorkspace.openSession(id)` realiza cada cambio. El panel de detalles no necesita
   tratamiento: el marco incluido ya lo cierra cuando cambia la sesión actual.
 - `ctx.workspaces.list.getSnapshot()` aporta el orden de los espacios de
   trabajo — el orden que recorren `←`/`→`, y la fuente de la lista de miembros

@@ -1,5 +1,18 @@
 # Änderungsprotokoll
 
+## 0.4.1 — `compat/0.2.0` (DSH-0.2.0-Linie)
+
+### Behoben
+
+- Pfeiltasten-Navigation auf DSH 0.2.0-rc.2 (und 0.1.7-rc.2 auf der Schwesterlinie `compat/0.1.7`, dort als 0.3.4) wiederhergestellt. Zwei brechende Änderungen der Host-Client-API hatten jede Pfeiltaste stillgelegt, obwohl das Plugin weiterhin aktivierte (`listener attached` in der Konsole, dann `keydown failed` bei jedem Tastendruck):
+  - `ISessions.open(id)` existiert nicht mehr — das Umschalten läuft nun über `uiWorkspace.openSession(target)`. Das Plugin injizierte bereits `uiWorkspace` und deklarierte den `@deepseek-ai/dsh-client-ui-workspace`-Peer, daher war keine Manifest-Änderung nötig.
+  - `SessionListState.current` wurde entfernt — die ausgewählte Sitzung wird nun im Narrow Waist (`deriveCurrent` in `src/client/navigate.ts`) aus `retainedBy.mainView > 0` abgeleitet, analog zum `mainSessionId` des Hosts.
+- Die Fake-Dienste in `tests/bundle.test.ts` wurden auf die echte Host-Snapshot-Form umgestellt, damit der Bundle-Smoke-Test diese Regression erkennt.
+
+### Hinweis
+
+- Die 0.4.0-Aussage „Nur Metadaten … nur additive Felder, nichts entfernt“ unten war falsch: `ISessions.open` und `SessionListState.current` wurden tatsächlich zwischen 0.1.5 und 0.1.7 entfernt. Diese Version korrigiert das.
+
 ## Unveröffentlicht — `compat/0.2.0` (DSH-0.2.0-Linie)
 
 ### Geändert

@@ -23,8 +23,8 @@ das Tippen sofort weitergehen kann.
 | Branch | DSH-Bereich | Status |
 | --- | --- | --- |
 | `master` | ~0.1.2 (ursprüngliche Basislinie) | zum Entwicklungszeitpunkt verifiziert |
-| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | reine Metadaten-Anpassung auf diesem Branch (Gegenüberstellung der Flächen von 0.2.0-rc.1 und 0.1.7: nur additive Felder); lint + typecheck + 52/52 Tests grün; veröffentlicht unter dem Dist-Tag `dsh-0.2.0` |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | reine Metadaten-Anpassung (0.1.7-Detektor-Suite D1–D11: null Treffer); lint + typecheck + 52/52 Tests grün; veröffentlicht unter dem Dist-Tag `dsh-0.1.7` |
+| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 0.4.1 stellt die Pfeiltasten-Navigation wieder her, die durch das Entfernen zweier Host-APIs (`ISessions.open`, `SessionListState.current`) ausgefallen war; die frühere Aussage „reine Metadaten-Anpassung“ war falsch; lint + typecheck + 60/60 Tests grün; veröffentlicht unter dem Dist-Tag `dsh-0.2.0` |
+| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 wendet dieselbe Korrektur auf der 0.1.7-Linie an; lint + typecheck + 60/60 Tests grün; veröffentlicht unter dem Dist-Tag `dsh-0.1.7` |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | Anpassung auf diesem Branch erledigt (Konsolen-Evidenz-Accessor + eingeschränkte `engines.dsh`); typecheck + 52/52 Tests hier grün; Live-Load-Evidenz ausstehend |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2 (Generation `dsh-client-runtime`) | defensive Anpassung erledigt; Live-Verifikation ausstehend |
 
@@ -74,7 +74,7 @@ Die Identität stammt aus den beiden Client-Controllern, niemals aus dem DOM:
 Zeilen tragen weder `data-*` noch `id`, man kann eine Zeile also nicht fragen,
 welche Sitzung sie ist.
 
-- `ctx.sessions.open(id)` führt jeden Wechsel aus. Das Detail-Panel braucht keine
+- `ctx.uiWorkspace.openSession(id)` führt jeden Wechsel aus. Das Detail-Panel braucht keine
   eigene Behandlung: Der mitgelieferte Frame schließt es bereits, wenn sich die
   aktuelle Sitzung ändert.
 - `ctx.workspaces.list.getSnapshot()` liefert die Arbeitsbereichs-Reihenfolge —

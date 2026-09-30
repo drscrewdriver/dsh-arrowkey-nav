@@ -1,5 +1,18 @@
 # Registro delle modifiche
 
+## 0.4.1 — `compat/0.2.0` (linea DSH 0.2.0)
+
+### Corretto
+
+- Ripristinata la navigazione con i tasti freccia su DSH 0.2.0-rc.2 (e 0.1.7-rc.2 sulla linea gemella `compat/0.1.7`, lì pubblicata come 0.3.4). Due modifiche breaking dell'API client dell'host avevano disattivato di nascosto ogni tasto freccia pur attivandosi ancora il plugin (`listener attached` in console, poi `keydown failed` a ogni pressione):
+  - `ISessions.open(id)` non esiste più — il passaggio ora avviene tramite `uiWorkspace.openSession(target)`. Il plugin iniettava già `uiWorkspace` e dichiarava il peer `@deepseek-ai/dsh-client-ui-workspace`, quindi nessuna modifica al manifest era necessaria.
+  - `SessionListState.current` è stato rimosso — la sessione selezionata è ora derivata nel narrow waist (`deriveCurrent` in `src/client/navigate.ts`) da `retainedBy.mainView > 0`, ricalcando il `mainSessionId` dell'host.
+- I servizi finti di `tests/bundle.test.ts` sono stati rimodellati sulla forma reale dello snapshot host, così che lo smoke test del bundle intercetti questa regressione.
+
+### Nota
+
+- L'affermazione 0.4.0 «Solo metadati … solo campi additivi, nulla rimosso» qui sotto era errata: `ISessions.open` e `SessionListState.current` erano in realtà stati rimossi tra 0.1.5 e 0.1.7. Questa release la corregge.
+
 ## Inedito — `compat/0.2.0` (linea DSH 0.2.0)
 
 ### Modificato

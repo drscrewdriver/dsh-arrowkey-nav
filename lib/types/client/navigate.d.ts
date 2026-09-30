@@ -23,10 +23,29 @@ export interface SessionSummary {
     /** Human-facing row label; also the DOM text used to bind a group section. */
     readonly displayTitle: string;
     readonly updatedAt: number;
+    /**
+     * Local ownership counts. `mainView > 0` marks the session the host treats
+     * as current; the host snapshot no longer carries a `current` field, so the
+     * selection is derived from this. Optional defensively: a row without it is
+     * simply not the selected one.
+     */
+    readonly retainedBy?: Readonly<Partial<Record<string, number>>>;
 }
-/** The session-list snapshot fields this plugin reads. */
+/**
+ * The host session-list snapshot shape this plugin adapts from. The host
+ * removed `current`, so the selection is derived (see `deriveCurrent`), not
+ * read. Only the fields this plugin actually reads are declared.
+ */
+export interface HostSessionListSnapshot {
+    readonly phase: string;
+    readonly byId: Readonly<Record<SessionId, SessionSummary>>;
+}
+/** The waist-internal session-list snapshot the resolvers read. */
 export interface SessionListSnapshot {
-    /** Host-list order. */
+    /**
+     * The selected session, derived by `deriveCurrent` from `retainedBy.mainView`;
+     * the host snapshot has no such field.
+     */
     readonly current: SessionId | undefined;
     readonly phase: string;
     readonly byId: Readonly<Record<SessionId, SessionSummary>>;
@@ -70,17 +89,42 @@ export interface WorkspacesReadFace {
         getSnapshot(): WorkspaceSnapshot;
     };
 }
-/** The `sessions` service fields this plugin reads and writes. */
+/** The `sessions` service fields this plugin reads. */
 export interface SessionsFace {
     readonly list: {
-        getSnapshot(): SessionListSnapshot;
+        getSnapshot(): HostSessionListSnapshot;
     };
-    open(id: SessionId): void;
 }
-/** The `uiWorkspace` service fields this plugin uses as a fallback. */
+/** The `uiWorkspace` service fields this plugin switches and falls back through. */
 export interface UiWorkspaceFace {
+    /**
+     * Select a Session and reveal its conversation; the host's replacement for
+     * the removed `sessions.open`. `SessionTarget` also accepts a subagent
+     * address, but this plugin filters subagents out, so it only ever passes an id.
+     */
+    openSession(target: SessionId): void;
     connectWorkspace(workspaceId: WorkspaceId): Promise<SessionId>;
 }
+/**
+ * The session the host treats as current: the row whose `mainView` retention
+ * is positive. Mirrors `mainSessionId` in the host's
+ * `ui-workspace/src/client/tree.ts`. At most one row matches by host invariant
+ * (`replaceMain` releases the previous before returning); if that ever breaks,
+ * the first match wins and navigation degrades rather than throws.
+ * @param list - the host session-list snapshot.
+ * @returns the selected session id, or undefined when none is retained.
+ */
+export declare function deriveCurrent(list: HostSessionListSnapshot): SessionId | undefined;
+/**
+ * Adapt the two host snapshots into this plugin's `NavState`, deriving the
+ * `current` field the host snapshot no longer carries. Single source of truth
+ * for both read sites (`apply.ts` / `session-nav.ts`), so the next time the
+ * host moves the selection elsewhere only `deriveCurrent` needs revisiting.
+ * @param workspaces - the host workspace-list snapshot.
+ * @param list - the host session-list snapshot.
+ * @returns the NavState every resolver in this file reads.
+ */
+export declare function toNavState(workspaces: WorkspaceSnapshot, list: HostSessionListSnapshot): NavState;
 /**
  * Resolve the workspace that accounts for a session.
  * @param items - workspace rows in host order.

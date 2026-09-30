@@ -1,18 +1,35 @@
 # Changelog
 
+## 0.4.1 — `compat/0.2.0` (DSH 0.2.0 line)
+
+### Fixed
+
+- Restored arrow-key navigation on DSH 0.2.0-rc.2 (and 0.1.7-rc.2 on the sibling `compat/0.1.7` line, released there as 0.3.4). Two host client-API breaking changes had silently disabled every arrow key even though the plugin still activated (`listener attached` in the console, then `keydown failed` on each press):
+  - `ISessions.open(id)` no longer exists — switching now goes through `uiWorkspace.openSession(target)`. The plugin already injected `uiWorkspace` and declared the `@deepseek-ai/dsh-client-ui-workspace` peer, so no manifest change was needed.
+  - `SessionListState.current` was removed — the selected session is now derived in the narrow waist (`src/client/navigate.ts` `deriveCurrent`) from `retainedBy.mainView > 0`, mirroring the host's own `mainSessionId`. `planArrow` / `visibleRows` / `session-nav.ts` / `index.ts` and the pure-resolver tests are unchanged.
+- `tests/bundle.test.ts` fake services were reshaped to the real host snapshot (`retainedBy.mainView` instead of `list.current`, `uiWorkspace.openSession` instead of `sessions.open`), so the bundle smoke test now catches this class of regression instead of passing green against a shape the host never had.
+
+### Note
+
+- The 0.4.0 "Metadata-only … additive fields only, nothing removed" claim below was incorrect: `ISessions.open` and `SessionListState.current` had in fact been removed between 0.1.5 and 0.1.7, and the 0.2.0 re-target inherited that break without re-verifying the behavior surface. This release corrects it.
+
+### Known (0.2.0 only, non-blocking)
+
+- On DSH 0.2.0 hosts, unnamed and blank rows are drawn with a localized label ("Untitled" / "New Session") that no longer equals `displayTitle`. A group containing such a row fails the DOM label match, so the plugin safely falls back to the controller order for that workspace: arrow navigation still works, but Up/Down order may differ slightly from what is drawn and `scrollToRow` skips those rows. Fixing it exactly would couple the client half to the host's locale dictionary (forbidden by the client purity gate); documented in the `src/client/dom.ts` header and deliberately not fixed here.
+
 ## Unreleased — `compat/0.2.0` (DSH 0.2.0 line)
 
 ### Changed
 
-- `peerDependencies` and `engines.dsh` re-targeted to the DSH 0.2.0 line: `>=0.2.0-rc.1 <0.2.1-0` (package.json + dsh.plugin.json). Metadata-only: every face this plugin reads (`sessions.list` snapshot, `WorkspaceSnapshot`/`WorkspaceView`, `uiWorkspace.connectWorkspace`) was diffed between the 0.1.7-rc.2 and 0.2.0-rc.1 declarations — additive fields only, nothing removed.
-- Install docs point at `github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0`; the registry package ships under the `dsh-0.2.0` dist-tag as `0.4.0`.
+- `peerDependencies` and `engines.dsh` re-targeted to the DSH 0.2.0 line: `>=0.2.0-rc.1 <0.2.1-0` (package.json + dsh.plugin.json). The face this plugin reads (`sessions.list` snapshot, `WorkspaceSnapshot`/`WorkspaceView`, `uiWorkspace.connectWorkspace`) was diffed between the 0.1.7-rc.2 and 0.2.0-rc.1 declarations. (The original "additive fields only, nothing removed" claim was wrong — `ISessions.open` and `SessionListState.current` had already been removed before 0.1.7; see the 0.4.1 entries above.)
+- Install docs point at `github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0`; the registry package ships under the `dsh-0.2.0` dist-tag as `0.4.1`.
 
 ## Unreleased — `compat/0.1.7` (DSH 0.1.7 line)
 
 ### Changed
 
-- `peerDependencies` and `engines.dsh` re-targeted to the DSH 0.1.7 line: `>=0.1.7-rc.1 <0.1.8-0` (package.json + dsh.plugin.json). Metadata-only: the read-only 0.1.7 detector suite (D1–D11) reports zero hits, and this plugin imports no `@deepseek-ai/*` module at build or test time.
-- Install docs point at `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7`; the registry package ships under the `dsh-0.1.7` dist-tag as `0.3.3`.
+- `peerDependencies` and `engines.dsh` re-targeted to the DSH 0.1.7 line: `>=0.1.7-rc.1 <0.1.8-0` (package.json + dsh.plugin.json). The read-only 0.1.7 detector suite (D1–D11) reports zero hits and this plugin imports no `@deepseek-ai/*` module at build or test time — but that suite did not cover the `sessions.open` / `SessionListState.current` behavior surface, which was in fact broken and is fixed in 0.3.4.
+- Install docs point at `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7`; the registry package ships under the `dsh-0.1.7` dist-tag as `0.3.4`.
 
 ### Added
 

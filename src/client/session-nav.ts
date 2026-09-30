@@ -9,7 +9,7 @@
 import { execute } from './apply.ts';
 import { composerDraftIsEmpty, composerHadFocus, displayOrder, focusComposer, scrollToRow } from './dom.ts';
 import { COMPOSER, DELTA, EDITABLE_SELECTOR, OVERLAY_SELECTOR } from './constants.ts';
-import { owningWorkspaceId, planArrow } from './navigate.ts';
+import { owningWorkspaceId, planArrow, toNavState } from './navigate.ts';
 import type { Plan } from './apply.ts';
 import type { LabelsBySession } from './dom.ts';
 import type { NavState, SessionId, Target, WorkspaceId } from './navigate.ts';
@@ -75,12 +75,7 @@ function decideIgnore(event: KeyboardEvent): { ignore: boolean; reason?: string 
 
 /** Read the two snapshots the navigation layer resolves against. */
 export function readNavState(plan: Plan): NavState {
-  const workspaces = plan.workspaces.list.getSnapshot();
-  return {
-    items: workspaces.items,
-    archivedSessionIds: workspaces.archivedSessionIds,
-    list: plan.sessions.list.getSnapshot(),
-  };
+  return toNavState(plan.workspaces.list.getSnapshot(), plan.sessions.list.getSnapshot());
 }
 
 /** Row label text per session, used to bind a drawn section to its rows. */

@@ -23,8 +23,8 @@ immediatamente.
 | Branch | Intervallo DSH | Stato |
 | --- | --- | --- |
 | `master` | ~0.1.2 (linea di base originale) | verificato al momento dello sviluppo |
-| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | adattamento ai soli metadati su questo branch (confronto delle superfici 0.2.0-rc.1 e 0.1.7: solo campi additivi); lint + typecheck + 52/52 test verdi; pubblicato con il dist-tag `dsh-0.2.0` |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | adattamento ai soli metadati (suite di rilevamento 0.1.7 D1–D11: zero riscontri); lint + typecheck + 52/52 test verdi; pubblicato con il dist-tag `dsh-0.1.7` |
+| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 0.4.1 ripristina la navigazione con i tasti freccia interrotta dalla rimozione di due API dell'host (`ISessions.open`, `SessionListState.current`); la precedente affermazione «adattamento ai soli metadati» era errata; lint + typecheck + 60/60 test verdi; pubblicato con il dist-tag `dsh-0.2.0` |
+| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 applica la stessa correzione sulla linea 0.1.7; lint + typecheck + 60/60 test verdi; pubblicato con il dist-tag `dsh-0.1.7` |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | adattamento completato su questo branch (accessore di evidenza della console + restringimento di `engines.dsh`); typecheck + 52/52 test verdi su questo branch; evidenza di caricamento reale in attesa |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2 (generazione `dsh-client-runtime`) | adattamento difensivo completato; verifica reale in sospeso |
 
@@ -73,7 +73,7 @@ il listener è posseduto dall'effetto Cordis del plugin e viene rimosso con esso
 L'identità proviene dai due controller client, mai dal DOM: le righe non portano
 né `data-*` né `id`, quindi non si può chiedere a una riga quale sessione sia.
 
-- `ctx.sessions.open(id)` esegue ogni cambio. Il pannello dei dettagli non
+- `ctx.uiWorkspace.openSession(id)` esegue ogni cambio. Il pannello dei dettagli non
   richiede trattamenti: la cornice fornita lo chiude già quando la sessione
   corrente cambia.
 - `ctx.workspaces.list.getSnapshot()` fornisce l'ordine delle aree di lavoro —

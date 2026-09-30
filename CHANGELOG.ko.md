@@ -1,18 +1,31 @@
 # 변경 이력
 
+## 0.4.1 — `compat/0.2.0` (DSH 0.2.0 라인)
+
+### 수정
+
+- DSH 0.2.0-rc.2(그리고 자매 라인 `compat/0.1.7`의 0.1.7-rc.2, 그리서는 0.3.4)에서 방향키 navigation을 복구. 호스트 클라이언트 API의 두 가지 파괴적 변경 때문에 플러그인은 활성화되지만(콘솔에 `listener attached`) 모든 방향키가 무반응(누를 때마다 `keydown failed`)이었음:
+  - `ISessions.open(id)`이 더 이상 존재하지 않음 — 전환은 `uiWorkspace.openSession(target)` 경유로 변경. 플러그인은 이미 `uiWorkspace`를 주입하고 `@deepseek-ai/dsh-client-ui-workspace` peer를 선언했으므로 manifest 변경은 불필요.
+  - `SessionListState.current`가 삭제됨 — 선택된 세션은 narrow waist(`src/client/navigate.ts`의 `deriveCurrent`)에서 `retainedBy.mainView > 0`으로 파생(호스트 자신의 `mainSessionId` 답습). `planArrow` / `visibleRows` / `session-nav.ts` / `index.ts` 와 순수 resolver 테스트는 불변.
+- `tests/bundle.test.ts`의 fake 서비스를 실제 호스트 스냅샷 형태(`list.current` 대신 `retainedBy.mainView`, `sessions.open` 대신 `uiWorkspace.openSession`)로 재작성. 이로써 이 종류의 퇴행을 bundle 스모크 테스트가 잡아낼 수 있음.
+
+### 참고
+
+- 아래 0.4.0의 "메타데이터만 … 추가 필드뿐, 삭제 없음" 주장은 잘못되었음: `ISessions.open`과 `SessionListState.current`는 실제로 0.1.5에서 0.1.7 사이에 삭제되었으며, 0.2.0 재지정은 행동 면을 재검증하지 않은 채 그 파괴를 계승했음. 이번 릴리스에서 정정.
+
 ## 미출시 — `compat/0.2.0` (DSH 0.2.0 라인)
 
 ### 변경
 
-- `peerDependencies`와 `engines.dsh`를 DSH 0.2.0 라인으로 재지정: `>=0.2.0-rc.1 <0.2.1-0` (package.json + dsh.plugin.json). 메타데이터만 변경했으며 이 플러그인이 읽는 모든 서비스 면(`sessions.list` 스냅샷, `WorkspaceSnapshot`/`WorkspaceView`, `uiWorkspace.connectWorkspace`)을 0.1.7-rc.2 대 0.2.0-rc.1 선언으로 diff 확인 — 추가 필드뿐, 삭제 없음.
-- 설치 문서는 `github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0`을 가리킨다. 레지스트리에는 `dsh-0.2.0` dist-tag로 `0.4.0`을 게시.
+- `peerDependencies`와 `engines.dsh`를 DSH 0.2.0 라인으로 재지정: `>=0.2.0-rc.1 <0.2.1-0` (package.json + dsh.plugin.json). 이 플러그인이 읽는 모든 서비스 면(`sessions.list` 스냅샷, `WorkspaceSnapshot`/`WorkspaceView`, `uiWorkspace.connectWorkspace`)을 0.1.7-rc.2 대 0.2.0-rc.1 선언으로 diff 확인. (원래 "추가 필드뿐, 삭제 없음" 주장은 오류 — `ISessions.open`과 `SessionListState.current`는 0.1.7 이전에 이미 삭제됨. 위 0.4.1 참조.)
+- 설치 문서는 `github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0`을 가리킨다. 레지스트리에는 `dsh-0.2.0` dist-tag로 `0.4.1`을 게시.
 
 ## 미출시 — `compat/0.1.7` (DSH 0.1.7 라인)
 
 ### 변경
 
-- `peerDependencies`와 `engines.dsh`를 DSH 0.1.7 라인으로 재지정: `>=0.1.7-rc.1 <0.1.8-0` (package.json + dsh.plugin.json). 메타데이터만 변경했으며 읽기 전용 0.1.7 판정 스위트(D1–D11)는 전부 0건. 빌드·테스트 시 `@deepseek-ai/*` 모듈을 import하지 않는다.
-- 설치 문서는 `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7`을 가리킨다. 레지스트리에는 `dsh-0.1.7` dist-tag로 `0.3.3`을 게시.
+- `peerDependencies`와 `engines.dsh`를 DSH 0.1.7 라인으로 재지정: `>=0.1.7-rc.1 <0.1.8-0` (package.json + dsh.plugin.json). 읽기 전용 0.1.7 판정 스위트(D1–D11)는 전부 0건이고 빌드·테스트 시 `@deepseek-ai/*` 모듈을 import하지 않는다 — 다만 이 스위트는 `sessions.open` / `SessionListState.current` 행동 면을 다루지 않았고, 그것은 실제로 깨져 있으며 0.3.4에서 수정.
+- 설치 문서는 `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7`을 가리킨다. 레지스트리에는 `dsh-0.1.7` dist-tag로 `0.3.4`를 게시.
 
 ### 추가
 
