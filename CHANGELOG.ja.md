@@ -1,11 +1,24 @@
 # 変更履歴
 
+## 0.3.4 — `compat/0.1.7`（DSH 0.1.7 ライン）
+
+### 修正
+
+- DSH 0.1.7-rc.2 で方向キー navigation を復旧（同じ修正が `compat/0.2.0` ラインで 0.4.1 として公開）。ホストのクライアント API の 2 つの破壊的変更により、プラグインは起動する（コンソールに `listener attached`）ものの全方向キーが無反応（押すたびに `keydown failed`）になっていた：
+  - `ISessions.open(id)` が存在しなくなった — 切り替えは `uiWorkspace.openSession(target)` 経由に変更。プラグインは既に `uiWorkspace` を注入し `@deepseek-ai/dsh-client-ui-workspace` peer を宣言済みのため、manifest 変更は不要。
+  - `SessionListState.current` が削除された — 選択中セッションは narrow waist（`src/client/navigate.ts` の `deriveCurrent`）で `retainedBy.mainView > 0` から導出（ホスト自身の `mainSessionId` を踏襲）。
+- `tests/bundle.test.ts` の fake サービスを実際のホストスナップショット形状へ作り直し、この種の退行を bundle スモークテストが検出できるようにした。
+
+### 注記
+
+- 下方の 0.3.3「メタデータのみ … D1–D11 ゼロヒット」の記述は誤解を招く：この判定スイートは `sessions.open` / `SessionListState.current` の挙動面をカバーしておらず、そこは実際に壊れていた。本リリースで訂正する。
+
 ## 未リリース — `compat/0.1.7`（DSH 0.1.7 ライン）
 
 ### 変更
 
-- `peerDependencies` と `engines.dsh` を DSH 0.1.7 ラインへ付け替え：`>=0.1.7-rc.1 <0.1.8-0`（package.json + dsh.plugin.json）。メタデータのみの変更で、読み取り専用の 0.1.7 判定スイート（D1–D11）はゼロヒット。ビルド・テスト時に `@deepseek-ai/*` モジュールを import しない。
-- インストール手順は `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7` を参照。レジストリは `dsh-0.1.7` dist-tag で `0.3.3` を公開。
+- `peerDependencies` と `engines.dsh` を DSH 0.1.7 ラインへ付け替え：`>=0.1.7-rc.1 <0.1.8-0`（package.json + dsh.plugin.json）。読み取り専用の 0.1.7 判定スイート（D1–D11）はゼロヒットで、ビルド・テスト時に `@deepseek-ai/*` モジュールを import しない — ただしこのスイートは `sessions.open` / `SessionListState.current` の挙動面をカバーしておらず、そこは実際に壊れており 0.3.4 で修正。
+- インストール手順は `github:drscrewdriver/dsh-arrowkey-nav#compat/0.1.7` を参照。レジストリは `dsh-0.1.7` dist-tag で `0.3.4` を公開。
 
 ### 追加
 

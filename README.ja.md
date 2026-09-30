@@ -20,7 +20,7 @@ DSH Web GUI 向けの矢印キーナビゲーション。キーボードから�
 | ブランチ | DSH 範囲 | 状態 |
 | --- | --- | --- |
 | `master` | ~0.1.2（当初のベースライン） | 開発時に検証済み |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | このブランチでメタデータのみ適合（0.1.7 判定スイート D1–D11：ゼロヒット）。lint + typecheck + 52/52 テストグリーン。`dsh-0.1.7` dist-tag で公開 |
+| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 はホストが 2 つの API（`ISessions.open`、`SessionListState.current`）を削除したことで失効した方向キー navigation を復旧。以前の「メタデータのみ適合」の記述は誤り。lint + typecheck + 60/60 テストグリーン。`dsh-0.1.7` dist-tag で公開 |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | このブランチで適合作業済み（コンソール証跡アクセサ + `engines.dsh` の絞り込み）。typecheck + 52/52 テストがグリーン。実機ロードの証跡は未取得 |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2（`dsh-client-runtime` 世代） | 防御的適合は完了。実機検証は未実施 |
 
@@ -63,7 +63,7 @@ dsh plugin --profile web remove dsh-arrowkey-nav
 行は `data-*` も `id` も持たないため、行にどのセッションなのかを問い合わせることは
 できません。
 
-- `ctx.sessions.open(id)` がすべての切り替えを実行します。詳細パネルに特別な
+- `ctx.uiWorkspace.openSession(id)` がすべての切り替えを実行します。詳細パネルに特別な
   処理は不要です: 同梱のフレームが、現在のセッションが変わった時点で既に
   それを閉じます。
 - `ctx.workspaces.list.getSnapshot()` がワークスペースの順序を提供します。これは

@@ -20,7 +20,7 @@ the press started, so typing can continue immediately.
 | Branch | DSH range | Status |
 | --- | --- | --- |
 | `master` | ~0.1.2 (original baseline) | verified at development time |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | metadata-only adaptation (0.1.7 detector suite D1–D11: zero hits); lint + typecheck + 52/52 tests green; published under the `dsh-0.1.7` dist-tag |
+| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 restores arrow-key navigation broken by two host API removals (`ISessions.open`, `SessionListState.current`); the earlier "metadata-only adaptation" claim was wrong; lint + typecheck + 60/60 tests green; published under the `dsh-0.1.7` dist-tag |
 | `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | adaptation done on this branch (console evidence accessor + narrowed `engines.dsh`); typecheck + 52/52 tests green here; live load evidence pending |
 | `compat/0.1.1` | ≤ 0.1.1-rc.2 (`dsh-client-runtime` generation) | defensive adaptation done; live verification pending |
 
@@ -66,7 +66,7 @@ owned by the plugin's Cordis effect and is removed with it.
 Identity comes from the two client controllers, never from the DOM: rows carry
 no `data-*` and no `id`, so a row cannot be asked what session it is.
 
-- `ctx.sessions.open(id)` performs every switch. The details panel needs no
+- `ctx.uiWorkspace.openSession(id)` performs every switch. The details panel needs no
   handling: the shipped frame already closes it when the current session
   changes.
 - `ctx.workspaces.list.getSnapshot()` supplies the workspace order — the order

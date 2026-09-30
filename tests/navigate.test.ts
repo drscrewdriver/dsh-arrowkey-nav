@@ -4,7 +4,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { newestOf, owningWorkspaceId, planArrow, visibleRows } from '../src/client/navigate.ts';
+import { deriveCurrent, newestOf, owningWorkspaceId, planArrow, visibleRows } from '../src/client/navigate.ts';
 import type { SessionId, SessionSummary, WorkspaceView } from '../src/client/navigate.ts';
 
 /** Build a session summary with the fields the resolver reads. */
@@ -173,4 +173,37 @@ test('unrelated keys resolve to nothing', () => {
   for (const key of ['Enter', 'a', 'PageDown', 'ArrowRightX', 'Space']) {
     assert.equal(planArrow(key, s), null);
   }
+});
+
+test('deriveCurrent mirrors the host mainSessionId rule', () => {
+  assert.equal(deriveCurrent({ phase: 'ready', byId: {
+    a: { id: 'a', displayTitle: 'a', updatedAt: 0, retainedBy: {} },
+    b: { id: 'b', displayTitle: 'b', updatedAt: 0, retainedBy: { mainView: 1 } },
+  } }), 'b');
+});
+
+test('deriveCurrent returns undefined when no row is mainView-retained', () => {
+  assert.equal(deriveCurrent({ phase: 'ready', byId: {
+    a: { id: 'a', displayTitle: 'a', updatedAt: 0, retainedBy: {} },
+  } }), undefined);
+});
+
+test('deriveCurrent tolerates a row without retainedBy', () => {
+  assert.equal(deriveCurrent({ phase: 'ready', byId: {
+    a: { id: 'a', displayTitle: 'a', updatedAt: 0 },
+  } }), undefined);
+});
+
+test('deriveCurrent ignores zero and other-source counts', () => {
+  assert.equal(deriveCurrent({ phase: 'ready', byId: {
+    a: { id: 'a', displayTitle: 'a', updatedAt: 0, retainedBy: { mainView: 0 } },
+    b: { id: 'b', displayTitle: 'b', updatedAt: 0, retainedBy: { conversation: 2 } },
+  } }), undefined);
+});
+
+test('deriveCurrent returns the first mainView-retained row', () => {
+  assert.equal(deriveCurrent({ phase: 'ready', byId: {
+    a: { id: 'a', displayTitle: 'a', updatedAt: 0, retainedBy: { mainView: 1 } },
+    b: { id: 'b', displayTitle: 'b', updatedAt: 0, retainedBy: { mainView: 1 } },
+  } }), 'a');
 });

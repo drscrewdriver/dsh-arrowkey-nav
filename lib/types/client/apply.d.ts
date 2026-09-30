@@ -1,9 +1,9 @@
 /**
  * Execution layer: turn one resolved target into client-side effects.
  *
- * The whole switching path is `sessions.open`. The details panel is not this
- * plugin's business: the shipped frame already closes it whenever the current
- * session changes, and the running build exposes no `selectPanel`.
+ * The whole switching path is `uiWorkspace.openSession`. The details panel is
+ * not this plugin's business: the shipped frame already closes it whenever the
+ * current session changes, and the running build exposes no `selectPanel`.
  */
 import { type SessionId, type SessionsFace, type Target, type UiWorkspaceFace, type WorkspaceId, type WorkspacesReadFace } from './navigate.ts';
 /** Exactly what `apply` needs; the plugin declares the matching injections. */

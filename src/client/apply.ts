@@ -1,12 +1,13 @@
 /**
  * Execution layer: turn one resolved target into client-side effects.
  *
- * The whole switching path is `sessions.open`. The details panel is not this
- * plugin's business: the shipped frame already closes it whenever the current
- * session changes, and the running build exposes no `selectPanel`.
+ * The whole switching path is `uiWorkspace.openSession`. The details panel is
+ * not this plugin's business: the shipped frame already closes it whenever the
+ * current session changes, and the running build exposes no `selectPanel`.
  */
 import {
   newestOf,
+  toNavState,
   visibleRows,
   type NavState,
   type SessionId,
@@ -44,17 +45,17 @@ export function openWorkspace(plan: Plan, workspaceId: WorkspaceId, order?: read
   const rows = order ?? visibleRows(workspace, state);
   const blank = blankSessionFor(workspace, state, rows);
   if (blank !== undefined) {
-    plan.sessions.open(blank);
+    plan.uiWorkspace.openSession(blank);
     return;
   }
   const newest = newestOf(rows, state);
   if (newest !== undefined) {
-    plan.sessions.open(newest);
+    plan.uiWorkspace.openSession(newest);
     return;
   }
   void plan.uiWorkspace.connectWorkspace(workspaceId)
     .then(
-      (sessionId) => { plan.sessions.open(sessionId); },
+      (sessionId) => { plan.uiWorkspace.openSession(sessionId); },
       () => {
         // A workspace that cannot be connected leaves the selection alone;
         // the next press retries. Nothing to report: this plugin has no UI.
@@ -72,7 +73,7 @@ export function openWorkspace(plan: Plan, workspaceId: WorkspaceId, order?: read
  */
 export function execute(plan: Plan, target: Target, order?: readonly SessionId[]): void {
   if (target.kind === 'session') {
-    plan.sessions.open(target.sessionId);
+    plan.uiWorkspace.openSession(target.sessionId);
     return;
   }
   openWorkspace(plan, target.workspaceId, order);
@@ -106,10 +107,5 @@ function blankSessionFor(
 
 /** Read the two snapshots the navigation layer resolves against. */
 function readState(plan: Plan): NavState {
-  const workspaces = plan.workspaces.list.getSnapshot();
-  return {
-    items: workspaces.items,
-    archivedSessionIds: workspaces.archivedSessionIds,
-    list: plan.sessions.list.getSnapshot(),
-  };
+  return toNavState(plan.workspaces.list.getSnapshot(), plan.sessions.list.getSnapshot());
 }
