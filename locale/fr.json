@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Navigation aux touches fléchées",
+    "description": "Navigation aux touches fléchées pour l'interface web DSH : haut/bas changent de session dans l'espace de travail courant, gauche/droite changent d'espace de travail."
+  }
+}

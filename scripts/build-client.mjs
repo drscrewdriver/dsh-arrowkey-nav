@@ -23,7 +23,7 @@ const outFile = join(root, 'lib', 'client.js');
 const packageName = 'dsh-arrowkey-nav';
 
 /** Concatenation order: constants and types first, entry last. */
-const MODULES = ['constants.ts', 'navigate.ts', 'dom.ts', 'apply.ts', 'session-nav.ts', 'index.ts'];
+const MODULES = ['constants.ts', 'navigate.ts', 'dom.ts', 'apply.ts', 'session-nav.ts', 'locales.ts', 'index.ts'];
 
 /** Load the TypeScript compiler, preferring a local install. */
 function loadTypeScript() {

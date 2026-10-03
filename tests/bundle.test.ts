@@ -117,7 +117,7 @@ function mount(doc, s) {
 test('the bundle registers the documented factory contract', () => {
   const { id, inject } = mount(fakeDocument(), services());
   assert.equal(id, 'dsh-arrowkey-nav');
-  assert.deepEqual(inject, ['sessions', 'workspaces', 'uiWorkspace']);
+  assert.deepEqual(inject, ['sessions', 'workspaces', 'uiWorkspace', 'locale']);
 });
 
 test('apply installs exactly one capturing keydown listener', () => {

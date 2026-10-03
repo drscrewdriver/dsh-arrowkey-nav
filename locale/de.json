@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Pfeiltastennavigation",
+    "description": "Pfeiltastennavigation für die DSH-Web-GUI: Hoch/Runter wechseln die Sitzung im aktuellen Workspace, Links/Rechts wechseln den Workspace."
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Arrow-Key Navigation",
+    "description": "Arrow-key navigation for the DSH Web GUI: Up/Down switch sessions inside the current workspace, Left/Right switch workspaces."
+  }
+}

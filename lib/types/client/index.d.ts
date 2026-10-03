@@ -6,10 +6,13 @@
  * no handling: the shipped frame closes it when the current session changes.
  */
 import type { Plan } from './apply.ts';
+import type { LocaleLike } from './locales.ts';
 /** Cordis service injections this plugin waits for. */
 export declare const inject: string[];
 /** The Cordis context fields this plugin uses. */
 export interface PluginContext extends Plan {
+    /** The locale service, when the host provides it; only used to register dictionaries. */
+    readonly locale?: LocaleLike;
     /** Owner-scoped teardown: the returned disposer runs when the plugin unloads. */
     effect(factory: () => () => void, label: string): () => void;
 }

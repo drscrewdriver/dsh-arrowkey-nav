@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Navigazione con i tasti freccia",
+    "description": "Navigazione con i tasti freccia per la GUI web di DSH: su/giù cambiano sessione nel workspace corrente, sinistra/destra cambiano workspace."
+  }
+}

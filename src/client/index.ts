@@ -7,12 +7,16 @@
  */
 import type { Plan } from './apply.ts';
 import { handleArrowKey, readNavState } from './session-nav.ts';
+import { dictionaries, NS } from './locales.ts';
+import type { LocaleLike } from './locales.ts';
 
 /** Cordis service injections this plugin waits for. */
-export const inject = ['sessions', 'workspaces', 'uiWorkspace'];
+export const inject = ['sessions', 'workspaces', 'uiWorkspace', 'locale'];
 
 /** The Cordis context fields this plugin uses. */
 export interface PluginContext extends Plan {
+  /** The locale service, when the host provides it; only used to register dictionaries. */
+  readonly locale?: LocaleLike;
   /** Owner-scoped teardown: the returned disposer runs when the plugin unloads. */
   effect(factory: () => () => void, label: string): () => void;
 }
@@ -22,6 +26,14 @@ export interface PluginContext extends Plan {
  * @param ctx - the plugin's Cordis context, narrowed to the services it uses.
  */
 export function apply(ctx: PluginContext): void {
+  // Dictionaries first: registration is guarded so a locale service that is
+  // absent, or a registry that rejects the pair, can never escape the effect
+  // body or take the listener down with it. The plugin currently renders no
+  // UI, so the dictionary is empty — the wiring is the point: the first string
+  // this plugin paints lands in a live, already-registered namespace.
+  const locale = ctx.locale;
+  if (locale) ctx.effect(() => locale.register(NS, dictionaries), 'dsh-arrowkey-nav: dictionaries');
+
   const onKeyDown = (event: KeyboardEvent): void => {
     try {
       handleArrowKey(ctx, event, trace);
