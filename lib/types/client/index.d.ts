@@ -13,10 +13,14 @@ import type { Plan } from './apply.ts';
 /**
  * Cordis service injections this plugin waits for.
  *
- * `uiWorkspace` is deliberately not listed: the 0.1.0/0.1.1 generations may
- * never register it, and waiting would leave the plugin PENDING forever there.
- * It is probed opportunistically per press instead (`Plan.uiWorkspace` is
- * optional), which costs nothing on the lines that do have it.
+ * `sessions` and `workspaces` exist on every supported host generation, and
+ * `uiWorkspace` on every one from 0.1.2 on. All three are declared: the
+ * modern client runner forbids reading an undeclared service — the context
+ * proxy throws, and a throw inside `apply` fails the fiber — so declaring is
+ * the only way `uiWorkspace` can be used at all. The two oldest generations
+ * (0.1.0/0.1.1) never register it, so there the fiber stays pending and the
+ * plugin runs inert; hosts that old are served by the legacy
+ * `dsh-arrowkey-nav@0.1.1` release instead.
  */
 export declare const inject: string[];
 /** The Cordis context fields this plugin uses. */

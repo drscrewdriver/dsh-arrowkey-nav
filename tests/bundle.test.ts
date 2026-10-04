@@ -117,21 +117,33 @@ function services() {
 /** Attach the bundle's plugin to a fake context. */
 function mount(doc, s) {
   const disposers = [];
-  const ctx = {
-    sessions: s.sessions,
-    workspaces: s.workspaces,
-    uiWorkspace: s.uiWorkspace,
-    effect: (factory) => { const d = factory(); disposers.push(d); return d; },
-  };
+  // The modern client runner's context proxy throws when a plugin reads a
+  // service it did not declare; replicate that so a regression (reading
+  // `uiWorkspace` when it was not declared) fails here exactly like it does
+  // on a live host.
+  const known = { sessions: s.sessions, workspaces: s.workspaces, uiWorkspace: s.uiWorkspace };
+  const ctx = new Proxy(known, {
+    get(target, key) {
+      if (key in target) return target[key];
+      if (typeof key === 'string' && /^[a-z]/.test(key)) {
+        throw new Error(`cannot get property "${key}" without inject`);
+      }
+      return undefined;
+    },
+  });
+  ctx.effect = (factory) => { const d = factory(); disposers.push(d); return d; };
   const { id, exports } = loadBundle(doc);
   exports.apply(ctx);
   return { id, inject: exports.inject, disposers };
 }
 
 /**
- * The pre-0.1.6 host generation: the list snapshot carries `current` itself,
- * switching goes through `sessions.open`, and the `uiWorkspace` service is
- * absent entirely (the bundle must not wait for it — see `index.ts`).
+ * The pre-0.1.6 host generation (0.1.2–0.1.5): the list snapshot carries
+ * `current` itself, the `uiWorkspace` service exists but has no
+ * `openSession` yet (it appeared in 0.1.6-alpha.2), so switching goes
+ * through `sessions.open`. The 0.1.0/0.1.1 generations are older still —
+ * they never register `uiWorkspace`, so there the fiber pends and `apply`
+ * never runs; they cannot be exercised at this layer.
  */
 function legacyServices() {
   const calls = [];
@@ -157,16 +169,19 @@ function legacyServices() {
     workspaces: {
       list: { getSnapshot: () => ({ items, archivedSessionIds: [], phase: 'ready' }) },
     },
-    uiWorkspace: undefined,
+    uiWorkspace: {
+      connectWorkspace: (workspaceId) => { calls.push(['connect', workspaceId]); return Promise.resolve('created'); },
+    },
   };
 }
 
 test('the bundle registers the documented factory contract', () => {
   const { id, inject } = mount(fakeDocument(), services());
   assert.equal(id, 'dsh-arrowkey-nav');
-  // `uiWorkspace` is deliberately absent: waiting on it would park the plugin
-  // PENDING forever on the pre-0.1.2 hosts that never register it.
-  assert.deepEqual(inject, ['sessions', 'workspaces']);
+  // All three services are declared: the modern runner's context proxy throws
+  // on an undeclared read, so `uiWorkspace` must be declared to be used at
+  // all — and it exists on every host from the 0.1.2 generation on.
+  assert.deepEqual(inject, ['sessions', 'workspaces', 'uiWorkspace']);
 });
 
 test('apply installs exactly one capturing keydown listener', () => {
@@ -328,12 +343,24 @@ test('a pre-0.1.6 host switches through the legacy sessions.open path', () => {
   assert.deepEqual(s.calls, [['open', 's-4']]);
 });
 
-test('a pre-0.1.6 host has no uiWorkspace service and never needs one', () => {
+test('a uiWorkspace service without openSession falls through to sessions.open', () => {
   const doc = fakeDocument();
   const s = legacyServices();
+  mount(doc, s);
+  doc.keydown('ArrowDown'); // current 's-2' from the snapshot itself -> s-3
+  assert.deepEqual(s.calls, [['open', 's-3']]);
+  s.calls.length = 0;
+  doc.keydown('ArrowRight'); // enter w-b: only row s-4 is visible
+  assert.deepEqual(s.calls, [['open', 's-4']]);
+});
+
+test('a declared-but-unresolved uiWorkspace must not break the mount', () => {
+  const doc = fakeDocument();
+  const s = legacyServices();
+  s.uiWorkspace = undefined; // declared in inject, never registered by this host
   const { disposers } = mount(doc, s);
-  // The listener-attach log reports service presence; a missing uiWorkspace
-  // must not have stopped the mount.
+  // The listener-attach log probes the service throw-safely; a missing
+  // uiWorkspace must not have stopped the mount or the disposer.
   assert.equal(doc.listeners.length, 1);
   for (const dispose of disposers) dispose();
   assert.equal(doc.listeners.length, 0);

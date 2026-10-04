@@ -10,17 +10,22 @@
  * changes.
  */
 import type { Plan } from './apply.ts';
+import { probeService } from './apply.ts';
 import { handleArrowKey, readNavState } from './session-nav.ts';
 
 /**
  * Cordis service injections this plugin waits for.
  *
- * `uiWorkspace` is deliberately not listed: the 0.1.0/0.1.1 generations may
- * never register it, and waiting would leave the plugin PENDING forever there.
- * It is probed opportunistically per press instead (`Plan.uiWorkspace` is
- * optional), which costs nothing on the lines that do have it.
+ * `sessions` and `workspaces` exist on every supported host generation, and
+ * `uiWorkspace` on every one from 0.1.2 on. All three are declared: the
+ * modern client runner forbids reading an undeclared service — the context
+ * proxy throws, and a throw inside `apply` fails the fiber — so declaring is
+ * the only way `uiWorkspace` can be used at all. The two oldest generations
+ * (0.1.0/0.1.1) never register it, so there the fiber stays pending and the
+ * plugin runs inert; hosts that old are served by the legacy
+ * `dsh-arrowkey-nav@0.1.1` release instead.
  */
-export const inject = ['sessions', 'workspaces'];
+export const inject = ['sessions', 'workspaces', 'uiWorkspace'];
 
 /** The Cordis context fields this plugin uses. */
 export interface PluginContext extends Plan {
@@ -47,12 +52,17 @@ export function apply(ctx: PluginContext): void {
     document.addEventListener('keydown', onKeyDown, true);
     // One line so a silent failure is never silent: if this does not appear,
     // the plugin never activated (a pending injection) and no key can work.
+    // A `false` flag means that service is missing on this DSH build: the
+    // listener stays attached but navigation stays inert (see handleArrowKey).
+    // `uiWorkspace` goes through the throw-safe probe: hosts whose module
+    // table lacked the package run with it undeclared, and the modern
+    // runner's strict context proxy throws on a direct read of it.
     console.info(
       'dsh-arrowkey-nav: listener attached',
       {
         sessions: ctx.sessions !== undefined,
         workspaces: ctx.workspaces !== undefined,
-        uiWorkspace: ctx.uiWorkspace !== undefined,
+        uiWorkspace: probeService(ctx, 'uiWorkspace') !== undefined,
       },
     );
     return () => {
@@ -75,7 +85,7 @@ export function apply(ctx: PluginContext): void {
             services: {
               sessions: ctx.sessions !== undefined,
               workspaces: ctx.workspaces !== undefined,
-              uiWorkspace: ctx.uiWorkspace !== undefined,
+              uiWorkspace: probeService(ctx, 'uiWorkspace') !== undefined,
             },
             sessions: {
               snapshotKeys: Object.keys(state.list),

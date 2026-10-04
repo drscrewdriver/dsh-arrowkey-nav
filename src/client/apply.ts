@@ -34,6 +34,25 @@ export interface Plan {
 }
 
 /**
+ * Read the `uiWorkspace` service off the live context, throw-safely.
+ *
+ * The service is declared in `inject`, so modern hosts resolve it normally;
+ * this helper exists because a failed resolution must never take the fiber
+ * down: the modern client runner's context proxy throws on a service that is
+ * not actually registered, and a throw inside `apply` fails the whole fiber.
+ * @param plan - the service faces (the live fiber context).
+ * @returns the service, or undefined when the context refuses or lacks it.
+ */
+export function probeService(plan: Plan, name: 'uiWorkspace'): UiWorkspaceFace | undefined {
+  try {
+    const value = (plan as unknown as Record<string, unknown>)[name];
+    return value === undefined || value === null ? undefined : (value as UiWorkspaceFace);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * The session-switch executor this running host exposes, bound and ready.
  *
  * `uiWorkspace.openSession` wins when present (0.1.6+ lines); otherwise the
@@ -43,7 +62,7 @@ export interface Plan {
  * @returns a one-argument switch function, or undefined.
  */
 export function switchExecutor(plan: Plan): ((id: SessionId) => void) | undefined {
-  const uiWorkspace = plan.uiWorkspace;
+  const uiWorkspace = probeService(plan, 'uiWorkspace');
   if (uiWorkspace !== undefined && typeof uiWorkspace.openSession === 'function') {
     return uiWorkspace.openSession.bind(uiWorkspace);
   }
@@ -85,7 +104,7 @@ export function openWorkspace(plan: Plan, workspaceId: WorkspaceId, order?: read
     open(newest);
     return;
   }
-  const uiWorkspace = plan.uiWorkspace;
+  const uiWorkspace = probeService(plan, 'uiWorkspace');
   if (uiWorkspace === undefined || typeof uiWorkspace.connectWorkspace !== 'function') return;
   void uiWorkspace.connectWorkspace(workspaceId)
     .then(

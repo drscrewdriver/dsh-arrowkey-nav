@@ -22,6 +22,17 @@ export interface Plan {
     readonly uiWorkspace?: UiWorkspaceFace;
 }
 /**
+ * Read the `uiWorkspace` service off the live context, throw-safely.
+ *
+ * The service is declared in `inject`, so modern hosts resolve it normally;
+ * this helper exists because a failed resolution must never take the fiber
+ * down: the modern client runner's context proxy throws on a service that is
+ * not actually registered, and a throw inside `apply` fails the whole fiber.
+ * @param plan - the service faces (the live fiber context).
+ * @returns the service, or undefined when the context refuses or lacks it.
+ */
+export declare function probeService(plan: Plan, name: 'uiWorkspace'): UiWorkspaceFace | undefined;
+/**
  * The session-switch executor this running host exposes, bound and ready.
  *
  * `uiWorkspace.openSession` wins when present (0.1.6+ lines); otherwise the
