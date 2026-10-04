@@ -1,5 +1,11 @@
 # Änderungsprotokoll
 
+## 0.5.1 — der von 0.5.0 eingeführte Web-Boot-Fatal ist behoben
+
+### Behoben
+
+- Auf aktuellen Hosts konnte 0.5.0 den gesamten Start scheitern lassen (`web boot: 1 entry did not activate — dsh-arrowkey-nav: failed`): Der Proxy des modernen Client-Runners **wirft**, wenn ein Plugin einen Dienst liest, den sein Fiber nicht deklariert hat — und 0.5.0 las `uiWorkspace` (Listener-Log, Diagnostik-Zugreifer, Executor-Prüfung), obwohl es aus dem Bundle-`inject` gestrichen war. Der Wurf in der ersten Effect ließ den Fiber FAILED werden; die Web-Boot-Schwelle behandelt einen fehlgeschlagenen Entry als fatal. 0.5.1 deklariert wieder alle drei Dienste — `uiWorkspace` existiert auf jedem Host ab der 0.1.2-Generation — und liest ihn ausschließlich über den wurfsicheren `probeService`. Die Generationen 0.1.0/0.1.1 registrieren `uiWorkspace` nie; dort bleibt der Fiber pending und das Plugin träge. Für diese beiden Linien dient weiterhin das legacy `dsh-arrowkey-nav@0.1.1`.
+
 ## 0.5.0 — eine Version für jede unterstützte Host-Linie
 
 ### Geändert

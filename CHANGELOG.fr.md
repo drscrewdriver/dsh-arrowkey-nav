@@ -1,5 +1,11 @@
 # Journal des modifications
 
+## 0.5.1 — correction du fatal au démarrage web introduit par 0.5.0
+
+### Corrigé
+
+- Sur les hôtes récents, 0.5.0 pouvait faire échouer tout le démarrage (`web boot: 1 entry did not activate — dsh-arrowkey-nav: failed`) : le proxy de contexte du runner moderne **lève une exception** quand un plugin lit un service que sa fiber n'a pas déclaré, et 0.5.0 lisait `uiWorkspace` (journal d'attachement du listener, accesseur de diagnostic, sonde de l'exécuteur) tout en l'ayant retiré de l'`inject` du bundle. L'exception dans le premier effect faisait passer la fiber en FAILED, et le verrou de web-boot traite un entry échoué comme fatal. 0.5.1 redéclare les trois services — `uiWorkspace` existe sur tout hôte à partir de la génération 0.1.2 — et ne le lit plus que via la sonde sûre `probeService`. Les générations 0.1.0/0.1.1 n'enregistrent jamais `uiWorkspace` ; là, la fiber reste en attente et le plugin inerte. Pour ces deux lignes, le legacy `dsh-arrowkey-nav@0.1.1` reste la référence.
+
 ## 0.5.0 — une version pour toutes les lignes d'hôte prises en charge
 
 ### Changé

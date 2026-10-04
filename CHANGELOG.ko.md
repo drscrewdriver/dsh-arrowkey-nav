@@ -1,5 +1,11 @@
 # 변경 이력
 
+## 0.5.1 — 0.5.0이 만든 web boot 치명 오류 수정
+
+### 수정
+
+- 최신 호스트에서 0.5.0은 부팅 전체를 실패시킬 수 있었습니다(`web boot: 1 entry did not activate — dsh-arrowkey-nav: failed`): 새 클라이언트 러너의 컨텍스트 프록시는 fiber가 선언하지 않은 서비스를 읽으면 **예외를 던지는데**, 0.5.0은 bundle `inject`에서 뺀 `uiWorkspace`를(리스너 부착 로그, 진단 접근자, 실행자 프로브) 읽고 있었습니다. 첫 effect 내부의 예외가 fiber를 FAILED로 만들고, web-boot 게이트는 실패 entry를 치명적으로 처리합니다. 0.5.1은 세 서비스를 다시 선언(`uiWorkspace`는 0.1.2 세대 이상 모든 호스트에 존재)하고 읽기는 모두 예외 안전한 `probeService`로 수행합니다. 0.1.0/0.1.1 세대는 `uiWorkspace`를 등록하지 않으므로 그 라인에서는 fiber가 대기 상태로 비활성입니다. 해당 두 라인은 기존과 같이 legacy `dsh-arrowkey-nav@0.1.1`을 사용하세요.
+
 ## 0.5.0 — 지원되는 모든 호스트 라인을 하나의 버전으로
 
 ### 변경

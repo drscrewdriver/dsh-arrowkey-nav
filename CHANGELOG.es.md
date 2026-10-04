@@ -1,5 +1,11 @@
 # Registro de cambios
 
+## 0.5.1 — corregido el fatal de arranque web introducido en 0.5.0
+
+### Corregido
+
+- En los hosts actuales 0.5.0 podía hacer fallar el arranque entero (`web boot: 1 entry did not activate — dsh-arrowkey-nav: failed`): el proxy de contexto del runner moderno **lanza una excepción** cuando un plugin lee un servicio que su fiber no declaró, y 0.5.0 leía `uiWorkspace` (log de adjunción del listener, accesora de diagnóstico, sondeo del executor) tras haberlo quitado del `inject` del bundle. La excepción dentro del primer effect fallaba el fiber, y la puerta de web-boot trata un entry fallido como fatal. 0.5.1 vuelve a declarar los tres servicios — `uiWorkspace` existe en todo host desde la generación 0.1.2 — y lo lee solo mediante la sonda segura `probeService`. Las generaciones 0.1.0/0.1.1 nunca registran `uiWorkspace`; allí el fiber queda pendiente y el plugin inerte. Para esas dos líneas sirve el legacy `dsh-arrowkey-nav@0.1.1`.
+
 ## 0.5.0 — una versión para todas las líneas de host admitidas
 
 ### Cambios
