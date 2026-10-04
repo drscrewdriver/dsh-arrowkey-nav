@@ -136,7 +136,7 @@ apunta `DSH_TYPESCRIPT` a un directorio de módulo `typescript` existente.
   una equivocada.
 - **Los campos de instantánea aún no son estables (pre-stable).** Las formas de
   las instantáneas de `sessions` y `workspaces` aún no son estables — esta rama
-  es la línea DSH 0.2.0 (`engines.dsh: >=0.2.0-rc.1 <0.2.1-0`). Si una
+  es la línea DSH 0.2.0 (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`). Si una
   actualización de dsh los cambia, `src/client/navigate.ts` y
   `src/client/apply.ts` son los únicos archivos que revisar; un servicio
   desaparecido deja el plugin en espera en lugar de hacer fallar la página.

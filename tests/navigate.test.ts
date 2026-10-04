@@ -4,7 +4,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { deriveCurrent, newestOf, owningWorkspaceId, planArrow, visibleRows } from '../src/client/navigate.ts';
+import { deriveCurrent, newestOf, owningWorkspaceId, planArrow, toNavState, visibleRows } from '../src/client/navigate.ts';
 import type { SessionId, SessionSummary, WorkspaceView } from '../src/client/navigate.ts';
 
 /** Build a session summary with the fields the resolver reads. */
@@ -206,4 +206,40 @@ test('deriveCurrent returns the first mainView-retained row', () => {
     a: { id: 'a', displayTitle: 'a', updatedAt: 0, retainedBy: { mainView: 1 } },
     b: { id: 'b', displayTitle: 'b', updatedAt: 0, retainedBy: { mainView: 1 } },
   } }), 'a');
+});
+
+test('toNavState passes the legacy snapshot current straight through', () => {
+  // Host generations before 0.1.6 maintain `current` themselves; it wins even
+  // when rows happen to carry a stale-looking retainedBy.
+  const workspaces = { items: THREE, archivedSessionIds: [], phase: 'ready' };
+  const nav = toNavState(workspaces, {
+    current: 's-2',
+    phase: 'ready',
+    byId: {
+      's-2': summary('s-2', { retainedBy: {} }),
+      's-3': summary('s-3', { retainedBy: { mainView: 1 } }),
+    },
+  });
+  assert.equal(nav.list.current, 's-2');
+});
+
+test('toNavState derives current when the snapshot no longer carries it', () => {
+  const workspaces = { items: THREE, archivedSessionIds: [], phase: 'ready' };
+  const nav = toNavState(workspaces, {
+    phase: 'ready',
+    byId: {
+      's-2': summary('s-2', { retainedBy: {} }),
+      's-3': summary('s-3', { retainedBy: { mainView: 1 } }),
+    },
+  });
+  assert.equal(nav.list.current, 's-3');
+});
+
+test('toNavState yields no current from an empty legacy field and no retention', () => {
+  const workspaces = { items: THREE, archivedSessionIds: [], phase: 'ready' };
+  const nav = toNavState(workspaces, {
+    phase: 'ready',
+    byId: { 's-2': summary('s-2') },
+  });
+  assert.equal(nav.list.current, undefined);
 });

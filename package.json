@@ -1,10 +1,10 @@
 {
   "name": "dsh-arrowkey-nav",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public",
-    "tag": "dsh-0.2.0"
+    "tag": "latest"
   },
   "description": "Arrow-key navigation for the DSH Web GUI: Up/Down switch sessions inside the current workspace, Left/Right switch workspaces.",
   "type": "module",
@@ -55,11 +55,13 @@
     "prepublishOnly": "npm run build",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.client.json",
     "lint": "eslint .",
+    "hosts:check": "node scripts/sync-hosts.mjs",
+    "hosts:write": "node scripts/sync-hosts.mjs --write",
     "test": "node --experimental-strip-types --no-warnings --test tests/navigate.test.ts tests/guard.test.ts tests/display-order.test.ts tests/bundle.test.ts"
   },
   "engines": {
     "node": ">=22.6.0",
-    "dsh": ">=0.2.0-rc.1 <0.2.1-0"
+    "dsh": "0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2"
   },
   "repository": {
     "type": "git",
@@ -82,20 +84,9 @@
     "typescript-eslint": "^8.71.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-api-session-controller": ">=0.2.0-rc.1 <0.2.1-0",
-    "@deepseek-ai/dsh-api-workspace-controller": ">=0.2.0-rc.1 <0.2.1-0",
-    "@deepseek-ai/dsh-client-ui-workspace": ">=0.2.0-rc.1 <0.2.1-0"
-  },
-  "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-api-session-controller": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-api-workspace-controller": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-client-ui-workspace": {
-      "optional": true
-    }
+    "@deepseek-ai/dsh-api-session-controller": "0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2",
+    "@deepseek-ai/dsh-api-workspace-controller": "0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-workspace": "0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2"
   },
   "license": "MIT"
 }

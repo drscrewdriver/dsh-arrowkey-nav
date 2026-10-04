@@ -35,11 +35,21 @@ export interface SessionSummary {
 }
 
 /**
- * The host session-list snapshot shape this plugin adapts from. The host
- * removed `current`, so the selection is derived (see `deriveCurrent`), not
- * read. Only the fields this plugin actually reads are declared.
+ * The host session-list snapshot shape this plugin adapts from. Two
+ * generations exist and both are served by this single codebase:
+ *
+ * - Through the 0.1.5 line the snapshot carries `current` — the selection the
+ *   host maintains itself.
+ * - From 0.1.6-alpha.2 (0.1.7/0.2.0 lines) the field was removed and the
+ *   selection is derived from `retainedBy.mainView` (see `deriveCurrent`).
+ *
+ * `toNavState` unions the two per press: the host's own `current` wins when
+ * present, the derivation runs otherwise. Only the fields this plugin actually
+ * reads are declared.
  */
 export interface HostSessionListSnapshot {
+  /** The selected session, maintained by host generations before 0.1.6. */
+  readonly current?: SessionId;
   readonly phase: string;
   readonly byId: Readonly<Record<SessionId, SessionSummary>>;
 }
@@ -47,8 +57,8 @@ export interface HostSessionListSnapshot {
 /** The waist-internal session-list snapshot the resolvers read. */
 export interface SessionListSnapshot {
   /**
-   * The selected session, derived by `deriveCurrent` from `retainedBy.mainView`;
-   * the host snapshot has no such field.
+   * The selected session, united by `toNavState` from the host's own `current`
+   * field (pre-0.1.6 lines) or the `retainedBy.mainView` derivation.
    */
   readonly current: SessionId | undefined;
   readonly phase: string;
@@ -99,6 +109,12 @@ export interface WorkspacesReadFace {
 /** The `sessions` service fields this plugin reads. */
 export interface SessionsFace {
   readonly list: { getSnapshot(): HostSessionListSnapshot };
+  /**
+   * Select a session, the switching path of host generations before 0.1.6;
+   * removed there and replaced by `uiWorkspace.openSession`. Optional: only
+   * read after the capability probe in `apply.ts` picked the executor.
+   */
+  readonly open?: (id: SessionId) => void;
 }
 
 /** The `uiWorkspace` service fields this plugin switches and falls back through. */
@@ -130,10 +146,12 @@ export function deriveCurrent(list: HostSessionListSnapshot): SessionId | undefi
 }
 
 /**
- * Adapt the two host snapshots into this plugin's `NavState`, deriving the
- * `current` field the host snapshot no longer carries. Single source of truth
- * for both read sites (`apply.ts` / `session-nav.ts`), so the next time the
- * host moves the selection elsewhere only `deriveCurrent` needs revisiting.
+ * Adapt the two host snapshots into this plugin's `NavState`, uniting the two
+ * host generations' notions of "selected": the snapshot's own `current` (all
+ * lines before 0.1.6) wins, otherwise the selection is derived from
+ * `retainedBy.mainView` (0.1.7/0.2.0). Single source of truth for both read
+ * sites (`apply.ts` / `session-nav.ts`), so the next time the host moves the
+ * selection only this function needs revisiting.
  * @param workspaces - the host workspace-list snapshot.
  * @param list - the host session-list snapshot.
  * @returns the NavState every resolver in this file reads.
@@ -142,7 +160,7 @@ export function toNavState(workspaces: WorkspaceSnapshot, list: HostSessionListS
   return {
     items: workspaces.items,
     archivedSessionIds: workspaces.archivedSessionIds,
-    list: { phase: list.phase, byId: list.byId, current: deriveCurrent(list) },
+    list: { phase: list.phase, byId: list.byId, current: list.current ?? deriveCurrent(list) },
   };
 }
 

@@ -141,7 +141,7 @@ existant.
   en une mauvaise.
 - **Les champs d'instantané sont pré-stables.** Les formes des instantanés
   `sessions` et `workspaces` ne sont pas encore stabilisées — cette branche est la
-  ligne DSH 0.2.0 (`engines.dsh: >=0.2.0-rc.1 <0.2.1-0`). Si une mise à niveau de
+  ligne DSH 0.2.0 (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`). Si une mise à niveau de
   dsh les modifie, `src/client/navigate.ts` et `src/client/apply.ts` sont les
   seuls fichiers à revoir ; un service disparu laisse le plugin en attente plutôt
   que de faire échouer la page.

@@ -1,17 +1,36 @@
 /**
  * Execution layer: turn one resolved target into client-side effects.
  *
- * The whole switching path is `uiWorkspace.openSession`. The details panel is
- * not this plugin's business: the shipped frame already closes it whenever the
- * current session changes, and the running build exposes no `selectPanel`.
+ * The switching path is capability-probed, never version-gated: hosts from
+ * 0.1.6 on expose `uiWorkspace.openSession`, older lines (0.1.0 through 0.1.5)
+ * expose `sessions.open`. Whichever the running host offers is picked per
+ * mount; a host offering neither leaves the plugin fail-open inert. The
+ * details panel is not this plugin's business: the shipped frame already
+ * closes it whenever the current session changes.
  */
-import { type SessionId, type SessionsFace, type Target, type UiWorkspaceFace, type WorkspaceId, type WorkspacesReadFace } from './navigate.ts';
+import { type SessionId, type Target, type UiWorkspaceFace, type WorkspaceId } from './navigate.ts';
+import type { SessionsFace, WorkspacesReadFace } from './navigate.ts';
 /** Exactly what `apply` needs; the plugin declares the matching injections. */
 export interface Plan {
     readonly sessions: SessionsFace;
     readonly workspaces: WorkspacesReadFace;
-    readonly uiWorkspace: UiWorkspaceFace;
+    /**
+     * The ui-workspace client service. Present from the 0.1.2 generation on; the
+     * bundle does not wait for it (waiting would park the plugin PENDING forever
+     * on the pre-0.1.2 hosts that lack it) — it is probed per press instead.
+     */
+    readonly uiWorkspace?: UiWorkspaceFace;
 }
+/**
+ * The session-switch executor this running host exposes, bound and ready.
+ *
+ * `uiWorkspace.openSession` wins when present (0.1.6+ lines); otherwise the
+ * legacy `sessions.open` (0.1.0–0.1.5 lines). `undefined` means this host
+ * offers neither: the plugin stays mounted but inert rather than throwing.
+ * @param plan - the service faces.
+ * @returns a one-argument switch function, or undefined.
+ */
+export declare function switchExecutor(plan: Plan): ((id: SessionId) => void) | undefined;
 /**
  * Adopt one workspace the way the sidebar does.
  *
@@ -19,13 +38,18 @@ export interface Plan {
  * updated visible session, then the shipped `connectWorkspace` (which creates a
  * blank session there). The first two are this plugin's product choice: always
  * creating would leave a trail of empty sessions behind every arrow press.
- * @param plan - the three service faces.
+ *
+ * Without an executor, or without `connectWorkspace` on a host that has
+ * neither, nothing happens: a session this plugin cannot reveal is a session
+ * it must not create.
+ * @param plan - the service faces.
  * @param workspaceId - target workspace.
+ * @param order - the drawn order of the target workspace, when it was read.
  */
 export declare function openWorkspace(plan: Plan, workspaceId: WorkspaceId, order?: readonly SessionId[]): void;
 /**
  * Apply one resolved target.
- * @param plan - the three service faces.
+ * @param plan - the service faces.
  * @param target - the target `planArrow` returned.
  * @param order - the drawn order of the target workspace, when it was read: the
  *   landing session then follows what the user sees rather than the controller's

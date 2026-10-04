@@ -128,10 +128,45 @@ function mount(doc, s) {
   return { id, inject: exports.inject, disposers };
 }
 
+/**
+ * The pre-0.1.6 host generation: the list snapshot carries `current` itself,
+ * switching goes through `sessions.open`, and the `uiWorkspace` service is
+ * absent entirely (the bundle must not wait for it — see `index.ts`).
+ */
+function legacyServices() {
+  const calls = [];
+  const byId = {
+    's-1': { id: 's-1', displayTitle: 'one', updatedAt: 0 },
+    's-2': { id: 's-2', displayTitle: 'two', updatedAt: 0 },
+    's-3': { id: 's-3', displayTitle: 'three', updatedAt: 0 },
+    's-4': { id: 's-4', displayTitle: 'four', updatedAt: 0 },
+  };
+  const list = { ids: ['s-1', 's-2', 's-3', 's-4'], phase: 'ready', byId, current: 's-2' };
+  const items = [
+    { workspaceId: 'w-a', path: 'E:\\a', sessionIds: ['s-1', 's-2', 's-3'] },
+    { workspaceId: 'w-b', path: 'E:\\b', sessionIds: ['s-4'] },
+  ];
+  return {
+    calls,
+    byId,
+    list,
+    sessions: {
+      list: { getSnapshot: () => list },
+      open: (id) => { calls.push(['open', id]); },
+    },
+    workspaces: {
+      list: { getSnapshot: () => ({ items, archivedSessionIds: [], phase: 'ready' }) },
+    },
+    uiWorkspace: undefined,
+  };
+}
+
 test('the bundle registers the documented factory contract', () => {
   const { id, inject } = mount(fakeDocument(), services());
   assert.equal(id, 'dsh-arrowkey-nav');
-  assert.deepEqual(inject, ['sessions', 'workspaces', 'uiWorkspace']);
+  // `uiWorkspace` is deliberately absent: waiting on it would park the plugin
+  // PENDING forever on the pre-0.1.2 hosts that never register it.
+  assert.deepEqual(inject, ['sessions', 'workspaces']);
 });
 
 test('apply installs exactly one capturing keydown listener', () => {
@@ -280,4 +315,38 @@ test('openSession synchronously moves mainView so the next press derives the new
   s.calls.length = 0;
   doc.keydown('ArrowDown'); // s-3 -> s-1 (wrap), derived from the moved mainView
   assert.deepEqual(s.calls, [['openSession', 's-1']]);
+});
+
+test('a pre-0.1.6 host switches through the legacy sessions.open path', () => {
+  const doc = fakeDocument();
+  const s = legacyServices();
+  mount(doc, s);
+  doc.keydown('ArrowDown'); // current 's-2' from the snapshot itself -> s-3
+  assert.deepEqual(s.calls, [['open', 's-3']]);
+  s.calls.length = 0;
+  doc.keydown('ArrowRight'); // enter w-b: only row s-4 is visible
+  assert.deepEqual(s.calls, [['open', 's-4']]);
+});
+
+test('a pre-0.1.6 host has no uiWorkspace service and never needs one', () => {
+  const doc = fakeDocument();
+  const s = legacyServices();
+  const { disposers } = mount(doc, s);
+  // The listener-attach log reports service presence; a missing uiWorkspace
+  // must not have stopped the mount.
+  assert.equal(doc.listeners.length, 1);
+  for (const dispose of disposers) dispose();
+  assert.equal(doc.listeners.length, 0);
+});
+
+test('a host offering neither executor stays mounted and inert', () => {
+  const doc = fakeDocument();
+  const s = legacyServices();
+  delete s.sessions.open;
+  mount(doc, s);
+  const event = doc.keydown('ArrowDown');
+  assert.deepEqual(s.calls, []);
+  // The key is still consumed: a half-served press must not leak into the
+  // composer's caret.
+  assert.equal(event.defaultPrevented, true);
 });
