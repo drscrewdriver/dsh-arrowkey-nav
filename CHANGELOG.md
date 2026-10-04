@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.2 — re-release of 0.5.1, no code changes
+
+### Note
+
+- Identical code to 0.5.1 (the strict-context crash fix); re-cut so the package actually ships its changelog entries — the 0.5.1 tarball was packed before they were committed. Verified on a live 0.1.7-rc.2 host (activation + full key pipeline) and on 0.2.0-rc.2 desktop (boot restored, ↑/↓ navigation working).
+
+## 0.5.1 — fixed the web-boot fatal introduced by 0.5.0
+
+### Fixed
+
+- On current hosts 0.5.0 could fail the entire boot (\`web boot: 1 entry did not activate — dsh-arrowkey-nav: failed\`): the modern client runner's context proxy **throws** when a plugin reads a service its fiber did not declare, and 0.5.0 read \`uiWorkspace\` (listener-attach log, diagnostic accessor, executor probe) after having trimmed it from the bundle \`inject\`. The throw inside the first effect failed the plugin's fiber, and the web-boot gate treats a failed entry as fatal. 0.5.1 declares all three services again — \`uiWorkspace\` exists on every host from the 0.1.2 generation on — and reads it only through a throw-safe probe (\`probeService\`), so a missing or unresolved service can never take the fiber down.
+- The 0.1.0/0.1.1 generations never register \`uiWorkspace\`, so on those lines the fiber now pends and the plugin runs inert; hosts that old are served by the legacy \`dsh-arrowkey-nav@0.1.1\` release (their loaders also predate two of the three module-table packages, which was already flagged as unverified).
+
 ## 0.5.0 — one version for every supported host line
 
 ### Changed

@@ -1,5 +1,11 @@
 # Registro de cambios
 
+## 0.5.2 — reedición de 0.5.1, sin cambios de código
+
+### Nota
+
+- Código idéntico al de 0.5.1 (la corrección del fallo de contexto estricto); reempaquetado para que el paquete incluya de verdad sus entradas de changelog — el tarball de 0.5.1 se empaquetó antes de confirmarlas. Verificado en un host real 0.1.7-rc.2 (activación + pipeline completo de teclas) y en el escritorio 0.2.0-rc.2 (arranque restaurado, ↑/↓ funcionando).
+
 ## 0.5.1 — corregido el fatal de arranque web introducido en 0.5.0
 
 ### Corregido

@@ -1,5 +1,11 @@
 # Registro delle modifiche
 
+## 0.5.2 — ri-emissione di 0.5.1, nessuna modifica al codice
+
+### Nota
+
+- Codice identico a 0.5.1 (la correzione del crash di contesto strict); ri-confezionato perché il pacchetto includa davvero le sue voci di changelog — il tarball 0.5.1 era stato impacchettato prima del commit. Verificato su un host reale 0.1.7-rc.2 (attivazione + intera pipeline dei tasti) e sul desktop 0.2.0-rc.2 (avvio ripristinato, ↑/↓ funzionanti).
+
 ## 0.5.1 — corretto il fatal del web boot introdotto dalla 0.5.0
 
 ### Corretto

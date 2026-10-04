@@ -1,5 +1,11 @@
 # Journal des modifications
 
+## 0.5.2 — revalidation de 0.5.1, aucun changement de code
+
+### Note
+
+- Code identique à 0.5.1 (la correction du plantage de contexte strict) ; re-cut pour que le paquet embarque réellement ses entrées de changelog — le tarball 0.5.1 avait été empaqueté avant leur commit. Vérifié sur un hôte réel 0.1.7-rc.2 (activation + pipeline complet des touches) et sur le bureau 0.2.0-rc.2 (démarrage restauré, ↑/↓ fonctionnels).
+
 ## 0.5.1 — correction du fatal au démarrage web introduit par 0.5.0
 
 ### Corrigé

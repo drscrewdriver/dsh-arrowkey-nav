@@ -1,5 +1,11 @@
 # Änderungsprotokoll
 
+## 0.5.2 — Neuauflage von 0.5.1, keine Codeänderungen
+
+### Hinweis
+
+- Derselbe Code wie 0.5.1 (der Strict-Context-Crashfix); neu geschnitten, damit das Paket seine Changelog-Einträge tatsächlich enthält — das 0.5.1-Tarball wurde vor dem Commit gepackt. Verifiziert auf einem echten 0.1.7-rc.2-Host (Aktivierung + komplette Tasten-Pipeline) und auf 0.2.0-rc.2-Desktop (Boot wiederhergestellt, ↑/↓ funktioniert).
+
 ## 0.5.1 — der von 0.5.0 eingeführte Web-Boot-Fatal ist behoben
 
 ### Behoben
