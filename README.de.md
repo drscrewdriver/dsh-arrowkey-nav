@@ -18,32 +18,29 @@ Grenze zu einem Nachbar-Arbeitsbereich; das Überschreiten ist Sache von
 der Fokus kehrt zum Eingabefeld zurück, wenn der Tastendruck dort begann, sodass
 das Tippen sofort weitergehen kann.
 
-## Branches und DSH-Versionen
+## Version und DSH-Linien
 
-| Branch | DSH-Bereich | Status |
-| --- | --- | --- |
-| `master` | ~0.1.2 (ursprüngliche Basislinie) | zum Entwicklungszeitpunkt verifiziert |
-| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 0.4.1 stellt die Pfeiltasten-Navigation wieder her, die durch das Entfernen zweier Host-APIs (`ISessions.open`, `SessionListState.current`) ausgefallen war; die frühere Aussage „reine Metadaten-Anpassung“ war falsch; lint + typecheck + 60/60 Tests grün; veröffentlicht unter dem Dist-Tag `dsh-0.2.0` |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 wendet dieselbe Korrektur auf der 0.1.7-Linie an; lint + typecheck + 60/60 Tests grün; veröffentlicht unter dem Dist-Tag `dsh-0.1.7` |
-| `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | Anpassung auf diesem Branch erledigt (Konsolen-Evidenz-Accessor + eingeschränkte `engines.dsh`); typecheck + 52/52 Tests hier grün; Live-Load-Evidenz ausstehend |
-| `compat/0.1.1` | ≤ 0.1.1-rc.2 (Generation `dsh-client-runtime`) | defensive Anpassung erledigt; Live-Verifikation ausstehend |
+Eine Version bedient alle unterstützten Host-Linien. Version `0.5.0` ist mit allen rc-Releases der DSH-Linien 0.1.0–0.2.0 getestet — die exakte Whitelist ist `engines.dsh`, verteilt aus der einzelnen Faktenquelle `scripts/hosts.mjs` durch `scripts/sync-hosts.mjs` (Handeingriffe lassen `npm run hosts:check` scheitern):
 
-Installieren Sie vom Branch, dessen Bereich Ihren DSH-Build abdeckt. `lib/` ist
-in jedem Branch committet, daher erfordert eine GitHub-Installation keinen
-Build-Schritt.
+| DSH-Linie | getestete rc-Releases |
+| --- | --- |
+| 0.1.0 | rc.2, rc.3, rc.6, rc.7, rc.8 |
+| 0.1.1 | rc.1, rc.2 |
+| 0.1.2 | rc.1 |
+| 0.1.5 | rc.1, rc.2, rc.3 |
+| 0.1.7 | rc.1, rc.2 |
+| 0.2.0 | rc.1, rc.2 |
+
+- Es gibt keinen Build je Linie: beide Umschalt-Generationen werden durch Kapabilitätserkennung in einem Bundle gewählt (`uiWorkspace.openSession` ab der 0.1.6-Generation, `sessions.open` davor) — jede Host-Linie läuft auf demselben Code.
+- Auf den Linien 0.1.0/0.1.1 (Generation `dsh-client-runtime`) sind Deklaration und Unit-Tests vollständig, die Keystroke-Verifikation auf echten Hosts steht noch aus; bis dahin sind diese beiden Zellen Best Effort.
 
 ## Installation
 
 ```sh
-dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-`#compat/0.2.0` ist die DSH-0.2.0-Linie, und genau das ist dieser Branch; `lib/`
-ist darin committet, daher erfordert eine GitHub-Installation keinen
-Build-Schritt. Das Registry-Paket wird per Dist-Tag installiert
-(`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.2.0 -w`); ein bloßes
-`dsh-arrowkey-nav` löst weiterhin zu `latest` auf, das hinter dieser Linie
-zurückbleibt.
+Das `latest` der Registry ist die eine Version für jede Linie. Jede Linie hat zudem einen Dist-Tag auf denselben Build — `dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5` und so weiter —, falls du die Linie nennen magst; das Installationsziel ist identisch. Ein Host-Release außerhalb der Tabelle wird von der `engines.dsh`-Whitelist abgelehnt, statt halb kaputt zu mounten.
 
 Starten Sie danach das Profil neu — eine laufende Instanz lädt keine neue
 Bundle-Schicht per Hot-Load. Laden Sie dann `http://127.0.0.1:3080` neu.
@@ -74,12 +71,7 @@ Die Identität stammt aus den beiden Client-Controllern, niemals aus dem DOM:
 Zeilen tragen weder `data-*` noch `id`, man kann eine Zeile also nicht fragen,
 welche Sitzung sie ist.
 
-- `ctx.uiWorkspace.openSession(id)` führt jeden Wechsel aus. Das Detail-Panel braucht keine
-  eigene Behandlung: Der mitgelieferte Frame schließt es bereits, wenn sich die
-  aktuelle Sitzung ändert.
-- `ctx.workspaces.list.getSnapshot()` liefert die Arbeitsbereichs-Reihenfolge —
-  die Reihenfolge, in der `←`/`→` wandern, und die Quelle der Mitgliederliste
-  jedes Arbeitsbereichs.
+- Jeder Wechsel läuft über den kapabilitätsermittelten Executor: `ctx.uiWorkspace.openSession(id)` ab der DSH-0.1.6-Generation, `ctx.sessions.open(id)` auf den älteren Linien — ein Bundle, kein Build je Linie. Das Detail-Panel braucht keine eigene Behandlung: Der mitgelieferte Frame schließt es bereits, wenn sich die aktuelle Sitzung ändert.
 
 **Welche Sitzung „die nächste" ist, folgt der Reihenfolge, die die Seitenleiste
 gerade zeichnet**, nicht der Mitgliederreihenfolge des Controllers. Beide weichen
@@ -139,11 +131,11 @@ ist, richten Sie `DSH_TYPESCRIPT` auf ein bestehendes `typescript`-Modulverzeich
   verschluckt: Die Auswahl hat sich bereits bewegt, und eine fehlende Zeile darf
   niemals zur falschen werden.
 - **Snapshot-Felder sind vorstabil.** Die Formen der `sessions`- und
-  `workspaces`-Snapshots sind noch nicht stabil — dieser Branch ist die
-  DSH-0.2.0-Linie (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`). Wenn ein dsh-Upgrade
+  `workspaces`-Snapshots sind noch nicht stabil — die getesteten Host-Releases sind genau die
+  `engines.dsh`-Whitelist (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`). Wenn ein dsh-Upgrade
   sie ändert, sind `src/client/navigate.ts` und `src/client/apply.ts` die
-  einzigen Dateien zur Überarbeitung; ein verschwundener Dienst lässt das Plugin
-  pending, statt die Seite fehlschlagen zu lassen.
+  einzigen Dateien zur Überarbeitung; ein Host ohne beide Umschalt-APIs lässt das Plugin
+  träge stehen, statt die Seite fehlschlagen zu lassen.
 
 ## Aufbau
 

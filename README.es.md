@@ -17,32 +17,29 @@ vecino; cruzar es labor de `←`/`→`. Tras un cambio, la fila de destino se
 desplaza hasta quedar a la vista, y el foco vuelve al cuadro de redacción si allí
 comenzó la pulsación, de modo que se puede seguir escribiendo de inmediato.
 
-## Ramas y versiones de DSH
+## Versión y líneas de DSH
 
-| Rama | Rango de DSH | Estado |
-| --- | --- | --- |
-| `master` | ~0.1.2 (línea base original) | verificada en su momento de desarrollo |
-| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 0.4.1 restaura la navegación con flechas rota por la eliminación de dos API del host (`ISessions.open`, `SessionListState.current`); la afirmación anterior «adaptación solo de metadatos» era errónea; lint + typecheck + 60/60 pruebas en verde; publicada con el dist-tag `dsh-0.2.0` |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 aplica la misma corrección en la línea 0.1.7; lint + typecheck + 60/60 pruebas en verde; publicada con el dist-tag `dsh-0.1.7` |
-| `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | adaptación hecha en esta rama (accesor de evidencias de consola + estrechamiento de `engines.dsh`); typecheck + 52/52 pruebas en verde en esta rama; evidencia de carga en vivo pendiente |
-| `compat/0.1.1` | ≤ 0.1.1-rc.2 (generación `dsh-client-runtime`) | adaptación defensiva hecha; verificación en vivo pendiente |
+Una única versión sirve todas las líneas de host admitidas. La versión `0.5.0` está probada con todos los rc de las líneas DSH 0.1.0–0.2.0 — la lista blanca exacta es `engines.dsh`, distribuida desde la fuente única `scripts/hosts.mjs` por `scripts/sync-hosts.mjs` (una edición manual hace fallar `npm run hosts:check`):
 
-Instala desde la rama cuyo rango cubra tu build de DSH. `lib/` está comprometida
-en cada rama, así que una instalación desde GitHub no necesita paso de
-compilación.
+| Línea DSH | rc probados |
+| --- | --- |
+| 0.1.0 | rc.2, rc.3, rc.6, rc.7, rc.8 |
+| 0.1.1 | rc.1, rc.2 |
+| 0.1.2 | rc.1 |
+| 0.1.5 | rc.1, rc.2, rc.3 |
+| 0.1.7 | rc.1, rc.2 |
+| 0.2.0 | rc.1, rc.2 |
+
+- No hay build por línea: ambas generaciones de conmutación se despachan por sondeo de capacidades en un solo bundle (`uiWorkspace.openSession` en la generación 0.1.6+, `sessions.open` en las anteriores) — cada línea ejecuta el mismo código.
+- En las líneas 0.1.0/0.1.1 (generación `dsh-client-runtime`) la declaración y las pruebas unitarias están completas, pero falta la verificación de teclas en hosts reales; hasta entonces trata esas dos celdas como best effort.
 
 ## Instalación
 
 ```sh
-dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-`#compat/0.2.0` es la línea DSH 0.2.0, que es justamente esta rama; `lib/` está
-comprometida en ella, así que una instalación desde GitHub no necesita paso de
-compilación. El paquete del registro se instala por dist-tag
-(`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.2.0 -w`); un
-`dsh-arrowkey-nav` a secas sigue resolviendo a `latest`, que va por detrás de
-esta línea.
+El `latest` del registry es la única versión para todas las líneas. Cada línea también tiene un dist-tag que apunta al mismo build — `dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5`, etc. — si prefieres nombrar la línea; el destino de instalación es idéntico. Una versión de host fuera de la tabla es rechazada por la lista blanca `engines.dsh` en lugar de montarse a medias.
 
 Después reinicia el perfil — una instancia en ejecución no carga en caliente una
 nueva capa de bundle. Luego recarga `http://127.0.0.1:3080`.
@@ -73,11 +70,7 @@ La identidad viene de los dos controladores de cliente, nunca del DOM: las filas
 no llevan ni `data-*` ni `id`, así que no se puede preguntar a una fila qué
 sesión es.
 
-- `ctx.uiWorkspace.openSession(id)` realiza cada cambio. El panel de detalles no necesita
-  tratamiento: el marco incluido ya lo cierra cuando cambia la sesión actual.
-- `ctx.workspaces.list.getSnapshot()` aporta el orden de los espacios de
-  trabajo — el orden que recorren `←`/`→`, y la fuente de la lista de miembros
-  de cada espacio de trabajo.
+- Cada cambio pasa por el executor elegido por sondeo de capacidades: `ctx.uiWorkspace.openSession(id)` en las generaciones DSH 0.1.6+, `ctx.sessions.open(id)` en las líneas anteriores — un bundle, sin build por línea. El panel de detalles no necesita tratamiento: el marco incluido ya lo cierra cuando cambia la sesión actual.
 
 **Qué sesión es «la siguiente» sigue el orden que la barra lateral está
 dibujando**, no el orden de miembros del controlador. Ambos discrepan justo en el
@@ -135,11 +128,11 @@ apunta `DSH_TYPESCRIPT` a un directorio de módulo `typescript` existente.
   traga: la selección ya se movió, y una fila ausente nunca debe convertirse en
   una equivocada.
 - **Los campos de instantánea aún no son estables (pre-stable).** Las formas de
-  las instantáneas de `sessions` y `workspaces` aún no son estables — esta rama
-  es la línea DSH 0.2.0 (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`). Si una
+  las instantáneas de `sessions` y `workspaces` aún no son estables — las versiones de host probadas son exactamente la
+  lista blanca de `engines.dsh` (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`). Si una
   actualización de dsh los cambia, `src/client/navigate.ts` y
-  `src/client/apply.ts` son los únicos archivos que revisar; un servicio
-  desaparecido deja el plugin en espera en lugar de hacer fallar la página.
+  `src/client/apply.ts` son los únicos archivos que revisar; un host sin ninguna API de conmutación deja el plugin inerte
+  en lugar de hacer fallar la página.
 
 ## Estructura
 

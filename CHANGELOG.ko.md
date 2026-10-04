@@ -1,5 +1,21 @@
 # 변경 이력
 
+## 0.5.0 — 지원되는 모든 호스트 라인을 하나의 버전으로
+
+### 변경
+
+- **하나의 버전이 여섯 호스트 라인(0.1.0, 0.1.1, 0.1.2, 0.1.5, 0.1.7, 0.2.0)의 게시된 모든 rc를 서비스합니다.** 라인별 `compat/*` 브랜치와 라인별 빌드는 폐지하고 단일 번들로 통합했습니다. 라인 dist-tag(`dsh-0.1.0` … `dsh-0.2.0`)는 남아 있으며 모두 이 버전을 가리킵니다. 정확한 화이트리스트는 `scripts/hosts.mjs`에 있고 `scripts/sync-hosts.mjs --write`가 `engines.dsh`(package.json + dsh.plugin.json)·`peerDependencies`·README에 배포합니다. 수동 수정은 `npm run hosts:check`에서 실패합니다.
+- `peerDependencies`가 이제 필수입니다(`optional` 표시 삭제): 검증되지 않은 호스트는 조용히 빠진 서비스로 마운트되는 대신 설치가 명확히 실패합니다. 두 컨트롤러 peer는 존재하는 8개 버전을 열거합니다 — `@deepseek-ai/dsh-api-{session,workspace}-controller`는 0.1.2-rc.1에 처음 등장했으므로 0.1.0/0.1.1 세대는 `engines.dsh`로만 제어합니다. `@deepseek-ai/dsh-client-ui-workspace`는 전체 15개를 열거합니다.
+- 클라이언트 번들은 더 이상 `uiWorkspace` 서비스를 기다리지 않습니다(`inject`는 이제 `['sessions', 'workspaces']`): 0.1.0/0.1.1 세대에서는 등록되지 않을 수 있고, 기다리면 영원히 PENDING에 머물기 때문입니다. 이제 누를 때마다 프로브합니다.
+
+### 수정 (모든 라인에서 설계상)
+
+- 하나의 코드베이스가 케이퍼빌리티 프로브로 두 전환 세대를 처리합니다(`src/client/apply.ts`의 `switchExecutor`): 있으면 `uiWorkspace.openSession`(0.1.6+), 없으면 구버전 `sessions.open`(0.1.0–0.1.5). 둘 다 없는 호스트는 마운트된 채 비활성으로 유지됩니다. 선택된 세션은 세대 결합(`src/client/navigate.ts`의 `toNavState`)으로 읽습니다: 스냅샷 자체의 `current`(0.1.6 미만)가 우선, 없으면 `retainedBy.mainView` 도출(0.1.7/0.2.0). 라인 간 동작 차이는 구조적으로 불가능합니다 — 0.3.x/0.4.x의 회귀 유형이 이것입니다.
+
+### 알려진 사항
+
+- 키 입력 수준 검증 매트릭스(`--serve` + Playwright, rc당 1셀)가 남은 릴리스 관문입니다. 이 항목은 유닛 + 번들 커버리지만 포함합니다. 0.1.0/0.1.1 셀은 추가로, 해당 세대가 3항목 모듈 테이블 `dsh.client.inject`를 허용하는지에 달려 있습니다(해당 세대의 플러그인은 3개 패키지 중 2개보다 이전 세대입니다).
+
 ## 0.4.1 — `compat/0.2.0` (DSH 0.2.0 라인)
 
 ### 수정

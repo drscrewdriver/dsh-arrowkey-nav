@@ -13,25 +13,29 @@ DSH Web GUI 的方向键导航。不必离开键盘即可切换会话：
 
 `↑`/`↓` 在工作区两端回绕，且绝不会跨入相邻工作区；跨区是 `←`/`→` 的职责。切换后目标行会滚动进入视野；若按键时焦点在输入框，焦点会回到输入框，可立即继续输入。
 
-## 分支与 DSH 版本
+## 版本与 DSH 宿主线
 
-| 分支 | DSH 范围 | 状态 |
-| --- | --- | --- |
-| `master` | ~0.1.2（最初的基线） | 开发时验证通过 |
-| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 0.4.1 修复了因宿主删除两个 API（`ISessions.open`、`SessionListState.current`）而失效的方向键导航；之前「纯元数据适配」的说法有误；lint + typecheck + 60/60 测试全绿；以 `dsh-0.2.0` dist-tag 发布 |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 在 0.1.7 线上应用同一修复；lint + typecheck + 60/60 测试全绿；以 `dsh-0.1.7` dist-tag 发布 |
-| `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | 本分支完成适配（控制台证据访问器 + 收窄 `engines.dsh`）；本分支 typecheck + 52/52 测试全绿；实机加载证据待补 |
-| `compat/0.1.1` | ≤ 0.1.1-rc.2（`dsh-client-runtime` 世代） | 防御性适配已完成；实机验证待补 |
+一个版本服务全部受支持的宿主线。`0.5.0` 覆盖 DSH 0.1.0–0.2.0 六条线的全部 rc 版本 —— 精确白名单即 `engines.dsh`，由单一事实源 `scripts/hosts.mjs` 经 `scripts/sync-hosts.mjs` 下发（手改会在 `npm run hosts:check` 处失败）：
 
-请从覆盖你所用 DSH 构建的那条分支安装。每条分支都入库了 `lib/`，因此 GitHub 直装无需构建步骤。
+| DSH 宿主线 | 已验证的 rc 版本 |
+| --- | --- |
+| 0.1.0 | rc.2、rc.3、rc.6、rc.7、rc.8 |
+| 0.1.1 | rc.1、rc.2 |
+| 0.1.2 | rc.1 |
+| 0.1.5 | rc.1、rc.2、rc.3 |
+| 0.1.7 | rc.1、rc.2 |
+| 0.2.0 | rc.1、rc.2 |
+
+- 没有按线发布的构建：两代切换 API 由能力探测在同一个 bundle 里分派（0.1.6+ 世代走 `uiWorkspace.openSession`，更老的线走 `sessions.open`），所有宿主线运行的是同一份代码。
+- 0.1.0/0.1.1 两线（`dsh-client-runtime` 世代）声明面与单元测试已齐，实机按键级验证仍待补；在此之前请把这两格当作 best effort。
 
 ## 安装
 
 ```sh
-dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-`#compat/0.2.0` 即 DSH 0.2.0 线，也就是本分支；该分支已入库 `lib/`，GitHub 直装无需构建步骤。走 registry 请用 dist-tag（`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.2.0 -w`）；不带 tag 的裸安装仍解析到 `latest`。
+registry 的 `latest` 就是服务全部宿主线的唯一版本。每条线也有指向同一构建的 dist-tag（`dsh-arrowkey-nav@dsh-0.2.0`、`dsh-arrowkey-nav@dsh-0.1.5` 等），愿意点名线路也可以 —— 安装目标完全相同。白名单之外的宿主版本会被 `engines.dsh` 拒绝安装，而不是半坏地挂载。
 
 安装后需重启 profile —— 运行中的实例不会热加载新的 bundle 层。随后刷新 `http://127.0.0.1:3080`。
 
@@ -57,7 +61,7 @@ dsh plugin --profile web remove dsh-arrowkey-nav
 
 会话身份来自两个客户端控制器，绝不来自 DOM：会话行不携带 `data-*`，也没有 `id`，因此无法向某一行询问它是哪个会话。
 
-- `ctx.uiWorkspace.openSession(id)` 执行每一次切换。详情面板无需处理：官方框架在会话变化时已经会关闭它。
+- 每次切换都经过能力探测选出的执行器：DSH 0.1.6+ 世代走 `ctx.uiWorkspace.openSession(id)`，更老的线走 `ctx.sessions.open(id)` —— 一个 bundle，不按线出构建。详情面板无需处理：官方框架在会话变化时已经会关闭它。
 - `ctx.workspaces.list.getSnapshot()` 提供工作区顺序 —— 即 `←`/`→` 的遍历顺序，以及各工作区成员列表的来源。
 
 **「下一个」会话跟随侧边栏正在绘制的顺序**，而不是控制器的成员顺序。二者恰好会在你能察觉到的场景下不一致：侧边栏会将其自身持久化的顺序与成员关系做协调，并把最近活跃的会话提升到顶部，因此你打开一个旧会话的瞬间，它就会跳到第一行。为此本插件从侧边栏读取渲染后的行顺序，并在侧边栏未挂载时（收窄为侧栏导轨）回退到控制器顺序。仅当一个分区的行能覆盖控制器为该工作区报告的全部会话时，该分区才被接受；含糊或不匹配的分区会选择回退，而不是猜测。
@@ -84,7 +88,7 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **收窄为导轨的侧边栏同样不会滚动**，原因相同：树未被挂载。切换仍然会发生。
 - **「单一列表」模式**没有工作区分区，但 `←`/`→` 仍按控制器的工作区顺序遍历，因此列表看起来可能在各分区之间跳动。
 - **滚动是尽力而为。** 任何查找失败都被吞掉：选中项已经移动，而缺失的行绝不能变成错误的行。
-- **快照字段属于 pre-stable。** `sessions` 与 `workspaces` 的快照形状尚未稳定 —— 本分支是 DSH 0.2.0 线（`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`）。若 dsh 升级改变了它们，只需回看 `src/client/navigate.ts` 与 `src/client/apply.ts`；某个服务消失时，本插件会保持 pending，而不会让页面报错。
+- **快照字段属于 pre-stable。** `sessions` 与 `workspaces` 的快照形状尚未稳定 —— 已验证的宿主版本即 `engines.dsh` 白名单（`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`）。若 dsh 升级改变了它们，只需回看 `src/client/navigate.ts` 与 `src/client/apply.ts`；宿主连一套切换 API 都不提供时，本插件保持惰性，而不会让页面报错。
 
 ## 目录结构
 

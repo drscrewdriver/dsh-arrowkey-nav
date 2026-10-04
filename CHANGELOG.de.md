@@ -1,5 +1,21 @@
 # Änderungsprotokoll
 
+## 0.5.0 — eine Version für jede unterstützte Host-Linie
+
+### Geändert
+
+- **Eine Version bedient jetzt alle sechs Host-Linien (0.1.0, 0.1.1, 0.1.2, 0.1.5, 0.1.7, 0.2.0) — jedes veröffentlichte rc davon.** Die Linien-`compat/*`-Branches und Linien-Builds sind eingestellt; ein einziges Bundle übernimmt. Die Linien-Dist-Tags (`dsh-0.1.0` … `dsh-0.2.0`) bleiben und zeigen alle auf diese Version. Die exakte Whitelist liegt in `scripts/hosts.mjs` und wird von `scripts/sync-hosts.mjs --write` an `engines.dsh` (package.json + dsh.plugin.json), `peerDependencies` und die READMEs verteilt; Handeingriffe scheitern an `npm run hosts:check`.
+- `peerDependencies` sind jetzt ERFORDERLICH (die `optional`-Markierungen sind weg): ein ungetesteter Host lässt die Installation laut scheitern, statt mit still fehlendem Dienst zu mounten. Die beiden Controller-Peers enumerieren ihre 8 existierenden Versionen — `@deepseek-ai/dsh-api-{session,workspace}-controller` erschien erstmals mit 0.1.2-rc.1, die Generationen 0.1.0/0.1.1 werden daher allein durch `engines.dsh` geschützt; `@deepseek-ai/dsh-client-ui-workspace` enumeriert alle 15.
+- Das Client-Bundle wartet nicht mehr auf den Dienst `uiWorkspace` (`inject` ist jetzt `['sessions', 'workspaces']`): die Generationen 0.1.0/0.1.1 registrieren ihn womöglich nie, und Warten würde das Plugin dort für immer PENDING halten. Pro Tastendruck wird stattdessen geprobt.
+
+### Behoben (über alle Linien, by design)
+
+- Eine Codebasis bedient beide Umschalt-Generationen per Kapabilitätserkennung (`src/client/apply.ts` `switchExecutor`): `uiWorkspace.openSession`, wo vorhanden (0.1.6+), sonst das alte `sessions.open` (0.1.0–0.1.5); ein Host ohne beide bleibt gemountet, aber träge. Die ausgewählte Sitzung wird generationenvereinigt gelesen (`src/client/navigate.ts` `toNavState`): das eigene `current` des Snapshots (vor 0.1.6) gewinnt, sonst die `retainedBy.mainView`-Ableitung (0.1.7/0.2.0). Linienübergreifende Verhaltensabweichung ist konstruktiv ausgeschlossen — die Regressionsklasse hinter 0.3.x/0.4.x.
+
+### Bekannt
+
+- Die Keystroke-Verifikationsmatrix (`--serve` + Playwright, eine Zelle je rc) bleibt das letzte Release-Tor; dieser Eintrag kommt nur mit Unit- und Bundle-Coverage. Die Zellen 0.1.0/0.1.1 hängen zusätzlich davon ab, dass diese Generationen die dreieintragige Modultabelle `dsh.client.inject` tolerieren (ihre eigene Plugin-Generation ist älter als zwei der drei Pakete).
+
 ## 0.4.1 — `compat/0.2.0` (DSH-0.2.0-Linie)
 
 ### Behoben

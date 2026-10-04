@@ -38,13 +38,9 @@ Die Platzhalter in dieser Anleitung sind:
 - `<profile>`: das zu ändernde DSH-Profil, üblicherweise `web`;
 - `dsh-arrowkey-nav`: das npm-Paket und die Laufzeit-Plugin-ID.
 
-> **Unterstützter DSH-Bereich: `>=0.2.0-rc.1 <0.2.1-0`.**
+> **Unterstützte DSH-Versionen: alle rc-Releases der Linien 0.1.0–0.2.0.**
 >
-> Diese Anleitung dokumentiert den Branch `compat/0.2.0` — die DSH-0.2.0-Linie.
-> Die von ihm gelesenen Snapshot-Felder `sessions` und `workspaces` sind
-> vorstabil; prüfen Sie daher vor der Installation die laufende Version mit
-> `dsh --version`. Der Branch `master` ist die ursprüngliche ~0.1.2-Basislinie
-> (`>=0.1.2-rc.1`).
+> Diese Anleitung dokumentiert Version `0.5.0` — die eine Version für jede unterstützte Host-Linie. Die von ihr gelesenen Snapshot-Felder `sessions` und `workspaces` sind noch nicht stabil; prüfe die laufende Version vor der Installation mit `dsh --version`. Außerhalb der Whitelist lehnt `engines.dsh` die Installation ab.
 
 ## 0. Voraussetzungen und Ermittlung des Profils
 
@@ -60,23 +56,19 @@ Verwenden Sie das Profil, das Ihr laufender DSH-Prozess angibt. `web` ist
 ## 1. Offizielle Installation
 
 ```bash
-dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 ```
 
 (das Flag `-w` ist erforderlich, wenn das Profil eine pnpm-Workspace-Wurzel ist,
 wie es `web` ist.)
 
-Der Ref `#compat/0.2.0` wählt die DSH-0.2.0-Linie, die genau dieser Branch ist;
-`lib/` ist darin committet, daher erfordert eine GitHub-Installation keinen
-Build-Schritt. Eine Installation aus der Registry per Dist-Tag
-(`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`) installiert
-diese Linie; ein bloßes `dsh-arrowkey-nav` löst weiterhin zu `latest` auf.
+Version `0.5.0` bedient jede unterstützte Linie; der nackte Name installiert das `latest` der Registry, also genau diese Version. Jede Linie hat zudem einen Dist-Tag auf denselben Build (`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`), falls du die Linie nennen magst.
 
 Installieren Sie eine bestimmte Registry-Version explizit (die ~0.1.2-Linie von
-`master`):
+Eine bestimmte Host-Linie explizit über ihren Dist-Tag installieren (alle Tags zeigen auf denselben Build):
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.1.5 -w
 ```
 
 Die offizielle CLI aktualisiert die Profil-Abhängigkeit, die Lockdatei und
@@ -92,7 +84,7 @@ zu `minimumReleaseAgeExclude` in
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.1
+  - dsh-arrowkey-nav@0.5.0
 ```
 
 ## 2. Profil neu starten und Seite neu laden

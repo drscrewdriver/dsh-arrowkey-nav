@@ -17,29 +17,41 @@ neighbouring one; crossing is what `←`/`→` are for. After a switch the targe
 row is scrolled into view, and focus returns to the composer if that is where
 the press started, so typing can continue immediately.
 
-## Branches and DSH versions
+## Version and DSH lines
 
-| Branch | DSH range | Status |
-| --- | --- | --- |
-| `master` | ~0.1.2 (original baseline) | verified at development time |
-| `compat/0.2.0` | `>=0.2.0-rc.1 <0.2.1-0` | 0.4.1 restores arrow-key navigation broken by two host API removals (`ISessions.open`, `SessionListState.current`); the earlier "metadata-only adaptation" claim was wrong; lint + typecheck + 60/60 tests green; published under the `dsh-0.2.0` dist-tag |
-| `compat/0.1.7` | `>=0.1.7-rc.1 <0.1.8-0` | 0.3.4 applies the same fix on the 0.1.7 line; lint + typecheck + 60/60 tests green; published under the `dsh-0.1.7` dist-tag |
-| `compat/0.1.5-rc` | `>=0.1.5-alpha.1 <0.2.0-0` | adaptation done on this branch (console evidence accessor + narrowed `engines.dsh`); typecheck + 52/52 tests green here; live load evidence pending |
-| `compat/0.1.1` | ≤ 0.1.1-rc.2 (`dsh-client-runtime` generation) | defensive adaptation done; live verification pending |
+One version serves every supported host line. Version `0.5.0` is tested with
+all rc releases of the DSH 0.1.0–0.2.0 lines — the exact whitelist is
+`engines.dsh`, distributed from the single source `scripts/hosts.mjs` by
+`scripts/sync-hosts.mjs` (hand edits fail `npm run hosts:check`):
 
-Install from the branch whose range covers your DSH build. `lib/` is committed
-on every branch, so a GitHub-based install needs no build step.
+| DSH line | tested rc releases |
+| --- | --- |
+| 0.1.0 | rc.2, rc.3, rc.6, rc.7, rc.8 |
+| 0.1.1 | rc.1, rc.2 |
+| 0.1.2 | rc.1 |
+| 0.1.5 | rc.1, rc.2, rc.3 |
+| 0.1.7 | rc.1, rc.2 |
+| 0.2.0 | rc.1, rc.2 |
+
+- There is no per-line build: both switching generations are dispatched by
+  capability probing in one bundle (`uiWorkspace.openSession` on the 0.1.6+
+  generations, `sessions.open` on the older ones), so every host line runs the
+  same code.
+- On the 0.1.0/0.1.1 lines (`dsh-client-runtime` generation) support is
+  declaration-complete and unit-tested, but real-host keystroke verification is
+  still pending; until then treat those cells as best effort.
 
 ## Install
 
 ```sh
-dsh plugin --profile web add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-`#compat/0.2.0` is the DSH 0.2.0 line, which is what this branch is. `lib/` is committed on it,
-so a GitHub install needs no build step. The registry package installs by dist-tag
-(`dsh plugin --profile web add dsh-arrowkey-nav@dsh-0.2.0 -w`); a bare `dsh-arrowkey-nav`
-still resolves to `latest`, which lags this line.
+The registry's `latest` is the one version for every line. Each line also has a
+dist-tag pointing at the same build — `dsh-arrowkey-nav@dsh-0.2.0`,
+`dsh-arrowkey-nav@dsh-0.1.5`, and so on — if you prefer naming the line; the
+install target is identical. A host release outside the table above is
+rejected by the `engines.dsh` whitelist instead of mounting half-broken.
 
 Restart the profile afterwards — a running instance does not hot-load a new
 bundle layer. Then reload `http://127.0.0.1:3080`.
@@ -69,7 +81,9 @@ owned by the plugin's Cordis effect and is removed with it.
 Identity comes from the two client controllers, never from the DOM: rows carry
 no `data-*` and no `id`, so a row cannot be asked what session it is.
 
-- `ctx.uiWorkspace.openSession(id)` performs every switch. The details panel needs no
+- Every switch goes through the capability-probed executor: `ctx.uiWorkspace.openSession(id)`
+  on the DSH 0.1.6+ generations, `ctx.sessions.open(id)` on the older lines — one
+  bundle, no per-line build. The details panel needs no
   handling: the shipped frame already closes it when the current session
   changes.
 - `ctx.workspaces.list.getSnapshot()` supplies the workspace order — the order
@@ -126,10 +140,11 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **Scrolling is best effort.** Any lookup failure is swallowed: the selection
   has already moved, and a missing row must never turn into a wrong one.
 - **Snapshot fields are pre-stable.** `sessions` and `workspaces` snapshot shapes are
-  pre-stable — this branch is the DSH 0.2.0 line (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`).
+  pre-stable — the tested host releases are exactly the `engines.dsh` whitelist
+  (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`).
   If a dsh upgrade changes them, `src/client/navigate.ts` and
-  `src/client/apply.ts` are the only files to revisit; a service that is gone
-  leaves the plugin pending rather than failing the page.
+  `src/client/apply.ts` are the only files to revisit; a host that exposes
+  neither switching API leaves the plugin inert rather than failing the page.
 
 ## Layout
 

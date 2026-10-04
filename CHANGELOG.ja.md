@@ -1,5 +1,21 @@
 # 変更履歴
 
+## 0.5.0 — 全サポート対象ホストラインをひとつのバージョンで
+
+### 変更
+
+- **ひとつのバージョンが 6 ライン（0.1.0 / 0.1.1 / 0.1.2 / 0.1.5 / 0.1.7 / 0.2.0）の公開済み全 rc に対応。** ラインごとの `compat/*` ブランチとライン別ビルドは廃止し、単一バンドルに統合。ラインの dist-tag（`dsh-0.1.0` … `dsh-0.2.0`）は残り、すべてこのバージョンを指します。正確なホワイトリストは `scripts/hosts.mjs` にあり、`scripts/sync-hosts.mjs --write` が `engines.dsh`（package.json + dsh.plugin.json）・`peerDependencies`・README へ配布します。手直しは `npm run hosts:check` で失敗します。
+- `peerDependencies` は必須になりました（`optional` マークは削除）: 未検証ホストは静かに不足サービスで動く代わりに、インストールが明確に失敗します。2 つのコントローラ peer は存在する 8 バージョンを列挙 — `@deepseek-ai/dsh-api-{session,workspace}-controller` は 0.1.2-rc.1 で初登載なので、0.1.0/0.1.1 世代は `engines.dsh` のみで括ります。`@deepseek-ai/dsh-client-ui-workspace` は全 15 を列挙。
+- クライアントバンドルは `uiWorkspace` サービスを待たなくなりました（`inject` は `['sessions', 'workspaces']`）: 0.1.0/0.1.1 世代では登録されないことがあり、待つと永久に PENDING になるためです。押下ごとにプローブします。
+
+### 修正（全ライン共通の設計として）
+
+- ひとつのコードベースがケイパビリティプローブで両世代の切替を処理します（`src/client/apply.ts` の `switchExecutor`）: あれば `uiWorkspace.openSession`（0.1.6+）、なければ旧 `sessions.open`（0.1.0–0.1.5）。どちらもないホストではマウントしたまま不活性。選択中セッションは世代合同（`src/client/navigate.ts` の `toNavState`）で読む: スナップショット自身の `current`（0.1.6 未満）が優先、なければ `retainedBy.mainView` の導出（0.1.7/0.2.0）。ライン間の挙動差異は構造上起こり得ません — 0.3.x/0.4.x で実際に起きたリグレッションの種類です。
+
+### 既知
+
+- キーストローク単位の検証マトリクス（`--serve` + Playwright、rc ごとに 1 セル）が残るリリース関門です。本エントリはユニット + バンドル coverage のみ。0.1.0/0.1.1 セルはさらに、3 エントリのモジュールテーブル `dsh.client.inject` を当該世代が許容するかに依存します（当該世代のプラグインは 3 パッケージのうち 2 つより前の世代です）。
+
 ## 0.4.1 — `compat/0.2.0`（DSH 0.2.0 ライン）
 
 ### 修正

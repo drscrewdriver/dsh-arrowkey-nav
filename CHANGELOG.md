@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.0 — one version for every supported host line
+
+### Changed
+
+- **One version now serves all six host lines (0.1.0, 0.1.1, 0.1.2, 0.1.5, 0.1.7, 0.2.0) — every published rc of each.** The per-line \`compat/*\` branches and per-line builds are retired in favor of a single bundle; the line dist-tags (\`dsh-0.1.0\` … \`dsh-0.2.0\`) remain and all point at this version. The exact whitelist lives in \`scripts/hosts.mjs\` and is distributed by \`scripts/sync-hosts.mjs --write\` to \`engines.dsh\` (package.json + dsh.plugin.json), \`peerDependencies\` and the READMEs; hand edits fail \`npm run hosts:check\`.
+- \`peerDependencies\` are now REQUIRED (the \`optional\` markers are gone): an untested host fails the install loudly instead of mounting with a silently missing service. The two controller peers enumerate their 8 existing versions — \`@deepseek-ai/dsh-api-{session,workspace}-controller\` first shipped with 0.1.2-rc.1, so the 0.1.0/0.1.1 generations are gated by \`engines.dsh\` alone; \`@deepseek-ai/dsh-client-ui-workspace\` enumerates all 15.
+- The client bundle no longer waits for the \`uiWorkspace\` service (\`inject\` is now \`['sessions', 'workspaces']\`): the 0.1.0/0.1.1 generations may never register it, and waiting would park the plugin PENDING forever there. It is probed per press instead.
+
+### Fixed (by design, across all lines)
+
+- One codebase serves both switching generations through capability probing (\`src/client/apply.ts\` \`switchExecutor\`): \`uiWorkspace.openSession\` where it exists (0.1.6+), legacy \`sessions.open\` otherwise (0.1.0–0.1.5); a host offering neither stays mounted but inert. The selected session is read through a generation union (\`src/client/navigate.ts\` \`toNavState\`): the snapshot's own \`current\` (pre-0.1.6) wins, otherwise the \`retainedBy.mainView\` derivation (0.1.7/0.2.0). Per-line behavioral divergence is now impossible by construction — the class of regression behind 0.3.x/0.4.x.
+
+### Known
+
+- The keystroke-level verification matrix (\`--serve\` + Playwright, one cell per rc) is the remaining release gate; this entry ships with unit + bundle coverage only. The 0.1.0/0.1.1 cells additionally depend on those generations tolerating the three-entry module-table \`dsh.client.inject\` (their own plugin generation predates two of the three packages).
+
 ## 0.4.1 — `compat/0.2.0` (DSH 0.2.0 line)
 
 ### Fixed

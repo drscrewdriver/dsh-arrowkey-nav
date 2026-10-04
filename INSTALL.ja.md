@@ -37,12 +37,9 @@
 - `<profile>`: 変更対象の DSH プロファイル。通常は `web`。
 - `dsh-arrowkey-nav`: npm パッケージ名であり、実行時プラグイン ID。
 
-> **対応 DSH 範囲: `>=0.2.0-rc.1 <0.2.1-0`。**
+> **対応 DSH バージョン: 0.1.0–0.2.0 各ラインの全 rc。**
 >
-> このガイドが扱うのは `compat/0.2.0` ブランチ — DSH 0.2.0 ラインです。読み取る
-> `sessions` と `workspaces` のスナップショットフィールドが安定前なので、インストール前に
-> `dsh --version` で実行中のバージョンを確認してください。`master` ブランチは当初の
-> ~0.1.2 ベースライン（`>=0.1.2-rc.1`）です。
+> このガイドが扱うのは `0.5.0` — サポート対象の全ホストラインに対応する唯一のバージョンです。読み取る `sessions` と `workspaces` のスナップショットフィールドは安定前なので、インストール前に `dsh --version` で実行中のバージョンを確認してください。ホワイトリスト外のホストは `engines.dsh` が拒否します。
 
 ## 0. 前提条件とプロファイルの検出
 
@@ -58,21 +55,18 @@ ls "${DSH_HOME:-$HOME/.dsh}/profiles"
 ## 1. 公式インストール
 
 ```bash
-dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 ```
 
 (プロファイルが pnpm ワークスペースルートである場合 — `web` がそうですが — `-w`
 フラグが必要です。)
 
-`#compat/0.2.0` は DSH 0.2.0 ライン（= このブランチ）を選びます。`lib/` はコミット
-済みなので GitHub インストールにビルド手順は不要です。代わりにレジストリから
-インストールする場合（`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`）は、
-このラインが導入されます。tag なしの指定は `latest` に解決されます。
+バージョン `0.5.0` がサポート対象の全ラインに対応します。裸のパッケージ名はレジストリの `latest`（= このバージョン）を解決します。ラインを名指ししたいときは、同じビルドを指す dist-tag（`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`）も使えます。
 
-特定のレジストリ版を明示的にインストールする場合（`master` ~0.1.2 ライン）:
+特定のホストラインを明示的にインストールするには dist-tag を使います（すべてのタグは同一ビルドを指します）:
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.1.5 -w
 ```
 
 公式 CLI はプロファイルの依存関係、ロックファイル、`dsh.profile.bundles` を自動的に
@@ -87,7 +81,7 @@ DSH ランタイムは pnpm 11 を使用しており、その `minimumReleaseAge
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.1
+  - dsh-arrowkey-nav@0.5.0
 ```
 
 ## 2. プロファイルを再起動してページをリロードする

@@ -1,5 +1,21 @@
 # Journal des modifications
 
+## 0.5.0 — une version pour toutes les lignes d'hôte prises en charge
+
+### Changé
+
+- **Une seule version sert désormais les six lignes d'hôte (0.1.0, 0.1.1, 0.1.2, 0.1.5, 0.1.7, 0.2.0) — tous les rc publiés de chacune.** Les branches `compat/*` par ligne et les builds par ligne sont retirés au profit d'un bundle unique ; les dist-tags de ligne (`dsh-0.1.0` … `dsh-0.2.0`) subsistent et pointent tous vers cette version. La liste blanche exacte vit dans `scripts/hosts.mjs` et est distribuée par `scripts/sync-hosts.mjs --write` vers `engines.dsh` (package.json + dsh.plugin.json), `peerDependencies` et les README ; toute édition à la main échoue à `npm run hosts:check`.
+- `peerDependencies` sont désormais OBLIGATOIRES (les marqueurs `optional` disparaissent) : un hôte non testé fait échouer l'installation bruyamment au lieu de se monter avec un service silencieusement absent. Les deux peers contrôleurs énumèrent leurs 8 versions existantes — `@deepseek-ai/dsh-api-{session,workspace}-controller` est apparu avec 0.1.2-rc.1, les générations 0.1.0/0.1.1 sont donc couvertes par `engines.dsh` seul ; `@deepseek-ai/dsh-client-ui-workspace` énumère les 15.
+- Le bundle client n'attend plus le service `uiWorkspace` (`inject` vaut désormais `['sessions', 'workspaces']`) : les générations 0.1.0/0.1.1 peuvent ne jamais l'enregistrer, et l'attendre laisserait le plugin PENDING pour toujours. Il est sondé à chaque pression.
+
+### Corrigé (par conception, sur toutes les lignes)
+
+- Une seule base de code sert les deux générations de commutation par sonde de capacités (`src/client/apply.ts` `switchExecutor`) : `uiWorkspace.openSession` là où elle existe (0.1.6+), l'ancien `sessions.open` sinon (0.1.0–0.1.5) ; un hôte qui n'offre ni l'une ni l'autre reste monté mais inerte. La session sélectionnée est lue via une union de générations (`src/client/navigate.ts` `toNavState`) : le `current` propre à l'instantané (avant 0.1.6) gagne, sinon la dérivation `retainedBy.mainView` (0.1.7/0.2.0). La divergence de comportement entre lignes est impossible par construction — la classe de régression derrière 0.3.x/0.4.x.
+
+### Connu
+
+- La matrice de vérification au niveau des touches (`--serve` + Playwright, une cellule par rc) reste le dernier verrou de publication ; cette entrée n'embarque que la couverture unitaires + bundle. Les cellules 0.1.0/0.1.1 dépendent en outre de la tolérance de ces générations à la table de modules `dsh.client.inject` à trois entrées (leur propre génération de plugin précède deux des trois paquets).
+
 ## 0.4.1 — `compat/0.2.0` (ligne DSH 0.2.0)
 
 ### Corrigé

@@ -34,9 +34,9 @@ The placeholders in this guide are:
 - `<profile>`: the DSH profile to modify, usually `web`;
 - `dsh-arrowkey-nav`: the npm package and the runtime plugin ID.
 
-> **Supported DSH range: `>=0.2.0-rc.1 <0.2.1-0`.**
+> **Supported DSH versions: every rc release of the 0.1.0–0.2.0 lines.**
 >
-> This guide documents the `compat/0.2.0` branch — the DSH 0.2.0 line. The `sessions` and `workspaces` snapshot fields it reads are pre-stable, so check the running version with `dsh --version` before installing. The `master` branch is the original ~0.1.2 baseline (`>=0.1.2-rc.1`).
+> This guide documents version `0.5.0`, the one version for every supported host line. The `sessions` and `workspaces` snapshot fields it reads are pre-stable, so check the running version with `dsh --version` before installing; `engines.dsh` rejects any host outside the whitelist.
 
 ## 0. Prerequisites and profile discovery
 
@@ -51,17 +51,17 @@ Use the profile named by your running DSH process. `web` is common, but the acti
 ## 1. Official installation
 
 ```bash
-dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 ```
 
 (the `-w` flag is required when the profile is a pnpm workspace root, as `web` is.)
 
-The `#compat/0.2.0` ref selects the DSH 0.2.0 line, which is what this branch is; `lib/` is committed on it, so a GitHub install needs no build step. Installing from the registry instead, by dist-tag (`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`), installs this line; a bare `dsh-arrowkey-nav` still resolves to `latest`.
+Version `0.5.0` serves every supported line; the bare name installs the registry's `latest`, which is that version. Each line also has a dist-tag pointing at the same build (`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`) if you prefer naming the line.
 
-Install a specific registry version explicitly (the `master` ~0.1.2 line):
+Install a specific host line explicitly by its dist-tag (all tags point at the same build):
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.1.5 -w
 ```
 
 The official CLI updates the profile dependency, the lockfile, and `dsh.profile.bundles` automatically. Do not add a manual YAML row.
@@ -72,7 +72,7 @@ Registry installs only. The DSH runtime uses pnpm 11, whose `minimumReleaseAge` 
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.1
+  - dsh-arrowkey-nav@0.5.0
 ```
 
 ## 2. Restart the profile and reload the page

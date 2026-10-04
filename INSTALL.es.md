@@ -37,12 +37,9 @@ Los marcadores de posición de esta guía son:
 - `<profile>`: el perfil de DSH a modificar, normalmente `web`;
 - `dsh-arrowkey-nav`: el paquete npm y el ID del plugin en tiempo de ejecución.
 
-> **Rango de DSH compatible: `>=0.2.0-rc.1 <0.2.1-0`.**
+> **Versiones de DSH compatibles: todos los rc de las líneas 0.1.0–0.2.0.**
 >
-> Esta guía documenta la rama `compat/0.2.0` — la línea DSH 0.2.0. Los campos de
-> instantánea `sessions` y `workspaces` que lee aún no son estables, así que
-> comprueba la versión en ejecución con `dsh --version` antes de instalar. La
-> rama `master` es la línea base original ~0.1.2 (`>=0.1.2-rc.1`).
+> Esta guía documenta la versión `0.5.0` — la única versión para todas las líneas de host admitidas. Los campos de instantánea `sessions` y `workspaces` que lee aún no son estables; comprueba la versión en ejecución con `dsh --version` antes de instalar. Un host fuera de la lista blanca es rechazado por `engines.dsh`.
 
 ## 0. Requisitos previos y descubrimiento del perfil
 
@@ -58,23 +55,19 @@ pero el argumento `--profile` realmente activo es lo que manda.
 ## 1. Instalación oficial
 
 ```bash
-dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 ```
 
 (la bandera `-w` es necesaria cuando el perfil es la raíz de un workspace de
 pnpm, como lo es `web`.)
 
-El ref `#compat/0.2.0` selecciona la línea DSH 0.2.0, que es justamente esta
-rama; `lib/` está comprometida en ella, así que una instalación desde GitHub no
-necesita paso de compilación. Instalar desde el registro por dist-tag
-(`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`) instala
-esta línea; un `dsh-arrowkey-nav` a secas sigue resolviendo a `latest`.
+La versión `0.5.0` sirve todas las líneas admitidas; el nombre a secas instala el `latest` del registry, que es esa versión. Cada línea también tiene un dist-tag al mismo build (`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`) si prefieres nombrar la línea.
 
 Instala explícitamente una versión concreta del registro (la línea ~0.1.2 de
-`master`):
+Para instalar una línea de host concreta de forma explícita, usa su dist-tag (todas las etiquetas apuntan al mismo build):
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.1.5 -w
 ```
 
 La CLI oficial actualiza automáticamente la dependencia del perfil, el lockfile
@@ -89,7 +82,7 @@ política `minimumReleaseAge` puede bloquear una versión recién publicada con
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.1
+  - dsh-arrowkey-nav@0.5.0
 ```
 
 ## 2. Reiniciar el perfil y recargar la página

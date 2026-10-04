@@ -34,9 +34,9 @@
 - `<profile>`：要改动的 DSH profile，通常是 `web`；
 - `dsh-arrowkey-nav`：npm 包名，同时也是运行时插件 ID。
 
-> **支持的 DSH 范围：`>=0.2.0-rc.1 <0.2.1-0`。**
+> **支持的 DSH 版本：0.1.0–0.2.0 六条线的全部 rc。**
 >
-> 本指南描述的是 `compat/0.2.0` 分支 —— DSH 0.2.0 线。它读取的 `sessions` 与 `workspaces` 快照字段属于 pre-stable，安装前先用 `dsh --version` 确认当前版本。`master` 分支是最初的 ~0.1.2 基线（`>=0.1.2-rc.1`）。
+> 本指南描述的是 `0.5.0` —— 服务全部受支持宿主线的唯一版本。它读取的 `sessions` 与 `workspaces` 快照字段属于 pre-stable，安装前先用 `dsh --version` 确认当前版本；白名单之外的宿主会被 `engines.dsh` 拒绝。
 
 ## 0. 前置条件与 profile 探查
 
@@ -51,17 +51,17 @@ ls "${DSH_HOME:-$HOME/.dsh}/profiles"
 ## 1. 官方安装
 
 ```bash
-dsh plugin --profile <profile> add github:drscrewdriver/dsh-arrowkey-nav#compat/0.2.0 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav -w
 ```
 
 （当 profile 是 pnpm workspace 根时，如 `web`，`-w` 是必需的。）
 
-`#compat/0.2.0` 这个 ref 选中的是 DSH 0.2.0 线，也就是本分支；该分支已入库 `lib/`，所以 GitHub 直装无需构建步骤。若改从 registry 按 dist-tag 安装（`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`），选中的就是本线；不带 tag 的裸安装仍解析到 `latest`。
+`0.5.0` 服务所有受支持的宿主线；裸包名安装的是 registry 的 `latest`，即该版本。每条线也有指向同一构建的 dist-tag（`dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.2.0 -w`），愿意点名线路也可以。
 
-显式安装指定 registry 版本（`master` ~0.1.2 线）：
+需要点名某条宿主线时用它的 dist-tag 显式安装（所有 tag 指向同一构建）：
 
 ```bash
-dsh plugin --profile <profile> add dsh-arrowkey-nav@0.1.1 -w
+dsh plugin --profile <profile> add dsh-arrowkey-nav@dsh-0.1.5 -w
 ```
 
 官方 CLI 会自动更新 profile 依赖、锁文件与 `dsh.profile.bundles`。不要手工添加 YAML 行。
@@ -72,7 +72,7 @@ DSH 运行时使用 pnpm 11，其 `minimumReleaseAge` 策略可能拦截刚发�
 
 ```yaml
 minimumReleaseAgeExclude:
-  - dsh-arrowkey-nav@0.1.1
+  - dsh-arrowkey-nav@0.5.0
 ```
 
 ## 2. 重启 profile 并刷新页面
