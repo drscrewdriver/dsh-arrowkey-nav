@@ -52,6 +52,7 @@
   },
   "scripts": {
     "build": "node scripts/build-client.mjs",
+    "prepack": "npm run build",
     "prepublishOnly": "npm run build",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.client.json",
     "lint": "eslint .",
