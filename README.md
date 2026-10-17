@@ -141,7 +141,7 @@ npm run build       # regenerate lib/client.js after editing src/client
   has already moved, and a missing row must never turn into a wrong one.
 - **Snapshot fields are pre-stable.** `sessions` and `workspaces` snapshot shapes are
   pre-stable — the tested host releases are exactly the `engines.dsh` whitelist
-  (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2`).
+  (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1`).
   If a dsh upgrade changes them, `src/client/navigate.ts` and
   `src/client/apply.ts` are the only files to revisit; a host that exposes
   neither switching API leaves the plugin inert rather than failing the page.
