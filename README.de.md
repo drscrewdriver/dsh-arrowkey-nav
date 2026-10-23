@@ -132,7 +132,7 @@ ist, richten Sie `DSH_TYPESCRIPT` auf ein bestehendes `typescript`-Modulverzeich
   niemals zur falschen werden.
 - **Snapshot-Felder sind vorstabil.** Die Formen der `sessions`- und
   `workspaces`-Snapshots sind noch nicht stabil — die getesteten Host-Releases sind genau die
-  `engines.dsh`-Whitelist (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2`). Wenn ein dsh-Upgrade
+  `engines.dsh`-Whitelist (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3`). Wenn ein dsh-Upgrade
   sie ändert, sind `src/client/navigate.ts` und `src/client/apply.ts` die
   einzigen Dateien zur Überarbeitung; ein Host ohne beide Umschalt-APIs lässt das Plugin
   träge stehen, statt die Seite fehlschlagen zu lassen.

@@ -17,7 +17,7 @@ export const supportedHosts = Object.freeze([
   '0.1.2-rc.1',
   '0.1.5-rc.1', '0.1.5-rc.2', '0.1.5-rc.3',
   '0.1.7-rc.1', '0.1.7-rc.2',
-  '0.2.0-rc.1', '0.2.0-rc.2', '0.2.1-rc.1', '0.2.1-rc.2', // 2026-10-18 补票：rc.2（34/34 peer 逐包 npm 在版，声明面）
+  '0.2.0-rc.1', '0.2.0-rc.2', '0.2.1-rc.1', '0.2.1-rc.2', '0.2.1-rc.3', // 2026-10-18 补票：rc.2（34/34 peer 逐包 npm 在版，声明面）
 ]);
 
 /** The `engines.dsh` gate: exactly the enumerated rc whitelist, never a range. */
