@@ -24,7 +24,7 @@ export const supportedHosts = Object.freeze([
 export const peerRange = supportedHosts.join(' || ');
 
 /** The host build development and the CI matrix pin as their newest cell. */
-export const developmentHost = '0.2.0-rc.2';
+export const developmentHost = '0.2.1-rc.3';
 
 /**
  * `@deepseek-ai/dsh-api-session-controller` and
