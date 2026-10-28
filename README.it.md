@@ -130,7 +130,7 @@ punta `DSH_TYPESCRIPT` a una directory di modulo `typescript` esistente.
   diventare quella sbagliata.
 - **I campi degli snapshot sono pre-stabili.** Le forme degli snapshot `sessions`
   e `workspaces` non sono ancora stabilizzate — le versioni dell'host verificate sono esattamente la
-  whitelist `engines.dsh` (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3`). Se un aggiornamento di dsh li
+  whitelist `engines.dsh` (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3 || 0.2.1-rc.4`). Se un aggiornamento di dsh li
   cambia, `src/client/navigate.ts` e `src/client/apply.ts` sono gli unici file
   da rivedere; un host senza nessuna API di commutazione lascia il plugin inerte invece di far
   fallire la pagina.
