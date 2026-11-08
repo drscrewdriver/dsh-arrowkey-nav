@@ -19,7 +19,7 @@ comenzó la pulsación, de modo que se puede seguir escribiendo de inmediato.
 
 ## Versión y líneas de DSH
 
-Una única versión sirve todas las líneas de host admitidas. La versión `0.5.0` está probada con todos los rc de las líneas DSH 0.1.0–0.2.0 — la lista blanca exacta es `engines.dsh`, distribuida desde la fuente única `scripts/hosts.mjs` por `scripts/sync-hosts.mjs` (una edición manual hace fallar `npm run hosts:check`):
+Una única versión sirve todas las líneas de host admitidas. La versión `0.5.9` está probada con todos los rc de las líneas DSH 0.1.0–0.2.0 — el rango declarado es `engines.dsh`, distribuida desde la fuente única `scripts/hosts.mjs` por `scripts/sync-hosts.mjs` (una edición manual hace fallar `npm run hosts:check`):
 
 | Línea DSH | rc probados |
 | --- | --- |
@@ -39,7 +39,7 @@ Una única versión sirve todas las líneas de host admitidas. La versión `0.5.
 dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-El `latest` del registry es la única versión para todas las líneas. Cada línea también tiene un dist-tag que apunta al mismo build — `dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5`, etc. — si prefieres nombrar la línea; el destino de instalación es idéntico. Una versión de host fuera de la tabla es rechazada por la lista blanca `engines.dsh` en lugar de montarse a medias.
+El `latest` del registry es la única versión para todas las líneas. Cada línea también tiene un dist-tag que apunta al mismo build — `dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5`, etc. — si prefieres nombrar la línea; el destino de instalación es idéntico. Una versión de host fuera de la tabla es rechazada por el rango `engines.dsh` en lugar de montarse a medias.
 
 Después reinicia el perfil — una instancia en ejecución no carga en caliente una
 nueva capa de bundle. Luego recarga `http://127.0.0.1:3080`.
@@ -129,7 +129,7 @@ apunta `DSH_TYPESCRIPT` a un directorio de módulo `typescript` existente.
   una equivocada.
 - **Los campos de instantánea aún no son estables (pre-stable).** Las formas de
   las instantáneas de `sessions` y `workspaces` aún no son estables — las versiones de host probadas son exactamente la
-  lista blanca de `engines.dsh` (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-rc.1`). Si una
+  rango de `engines.dsh` (`engines.dsh: >=0.1.0-rc.2 <0.3.0-0`). Si una
   actualización de dsh los cambia, `src/client/navigate.ts` y
   `src/client/apply.ts` son los únicos archivos que revisar; un host sin ninguna API de conmutación deja el plugin inerte
   en lugar de hacer fallar la página.

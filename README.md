@@ -19,8 +19,8 @@ the press started, so typing can continue immediately.
 
 ## Version and DSH lines
 
-One version serves every supported host line. Version `0.5.0` is tested with
-all rc releases of the DSH 0.1.0–0.2.0 lines — the exact whitelist is
+One version serves every supported host line. Version `0.5.9` is tested with
+all rc releases of the DSH 0.1.0–0.2.0 lines — the declared range is
 `engines.dsh`, distributed from the single source `scripts/hosts.mjs` by
 `scripts/sync-hosts.mjs` (hand edits fail `npm run hosts:check`):
 
@@ -51,7 +51,7 @@ The registry's `latest` is the one version for every line. Each line also has a
 dist-tag pointing at the same build — `dsh-arrowkey-nav@dsh-0.2.0`,
 `dsh-arrowkey-nav@dsh-0.1.5`, and so on — if you prefer naming the line; the
 install target is identical. A host release outside the table above is
-rejected by the `engines.dsh` whitelist instead of mounting half-broken.
+rejected by the `engines.dsh` range instead of mounting half-broken.
 
 Restart the profile afterwards — a running instance does not hot-load a new
 bundle layer. Then reload `http://127.0.0.1:3080`.
@@ -140,8 +140,8 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **Scrolling is best effort.** Any lookup failure is swallowed: the selection
   has already moved, and a missing row must never turn into a wrong one.
 - **Snapshot fields are pre-stable.** `sessions` and `workspaces` snapshot shapes are
-  pre-stable — the tested host releases are exactly the `engines.dsh` whitelist
-  (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-rc.1`).
+  pre-stable — the tested host releases are the cells listed above, gated by the `engines.dsh` range
+  (`engines.dsh: >=0.1.0-rc.2 <0.3.0-0`).
   If a dsh upgrade changes them, `src/client/navigate.ts` and
   `src/client/apply.ts` are the only files to revisit; a host that exposes
   neither switching API leaves the plugin inert rather than failing the page.

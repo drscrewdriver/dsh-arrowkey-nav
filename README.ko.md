@@ -19,7 +19,7 @@ DSH 웹 GUI를 위한 화살표 키 내비게이션. 키보드에서 손을 떼�
 
 ## 버전과 DSH 호스트 라인
 
-하나의 버전이 지원되는 모든 호스트 라인을 서비스합니다. `0.5.0`은 DSH 0.1.0–0.2.0 여섯 라인의 모든 rc를 검증 대상으로 합니다 — 정확한 화이트리스트는 `engines.dsh`이며, 단일 사실 원천 `scripts/hosts.mjs`에서 `scripts/sync-hosts.mjs`가 배포합니다(수동 수정 시 `npm run hosts:check`가 실패합니다):
+하나의 버전이 지원되는 모든 호스트 라인을 서비스합니다. `0.5.9`은 DSH 0.1.0–0.2.0 여섯 라인의 모든 rc를 검증 대상으로 합니다 — 선언 범위는 `engines.dsh`이며, 단일 사실 원천 `scripts/hosts.mjs`에서 `scripts/sync-hosts.mjs`가 배포합니다(수동 수정 시 `npm run hosts:check`가 실패합니다):
 
 | DSH 라인 | 검증된 rc |
 | --- | --- |
@@ -39,7 +39,7 @@ DSH 웹 GUI를 위한 화살표 키 내비게이션. 키보드에서 손을 떼�
 dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-레지스트리의 `latest`가 모든 라인을 서비스하는 유일한 버전입니다. 각 라인에는 같은 빌드를 가리키는 dist-tag도 있습니다(`dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5` 등) — 라인을 명시하고 싶어도 설치 대상은 동일합니다. 표 밖의 호스트 릴리스는 `engines.dsh` 화이트리스트가 설치를 거부합니다.
+레지스트리의 `latest`가 모든 라인을 서비스하는 유일한 버전입니다. 각 라인에는 같은 빌드를 가리키는 dist-tag도 있습니다(`dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5` 등) — 라인을 명시하고 싶어도 설치 대상은 동일합니다. 표 밖의 호스트 릴리스는 `engines.dsh` 범위가 설치를 거부합니다.
 
 이후 프로필을 재시작하세요. 실행 중인 인스턴스는 새로운 번들 레이어를 핫 로드하지
 않습니다. 그런 다음 `http://127.0.0.1:3080`을 새로고침하세요.
@@ -117,7 +117,7 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **스크롤은 최선 노력 방식입니다.** 어떤 조회 실패든 삼켜집니다. 선택은 이미 이동했고,
   없는 행이 잘못된 행으로 바뀌어서는 안 되기 때문입니다.
 - **스냅샷 필드는 아직 안정화 전입니다.** `sessions`와 `workspaces` 스냅샷 형태는 안정화 전이며,
-  검증된 호스트 버전은 `engines.dsh` 화이트리스트 그대로입니다(`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-rc.1`). dsh 업그레이드로
+  검증된 호스트 버전은 `engines.dsh` 범위 그대로입니다(`engines.dsh: >=0.1.0-rc.2 <0.3.0-0`). dsh 업그레이드로
   이들이 바뀌면 `src/client/navigate.ts`와 `src/client/apply.ts`가 다시 살펴볼 유일한 파일입니다.
   두 전환 API를 모두 갖추지 않은 호스트에서는 페이지를 실패시키지 않고 플러그인이 비활성 상태로 남습니다.
 

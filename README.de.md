@@ -20,7 +20,7 @@ das Tippen sofort weitergehen kann.
 
 ## Version und DSH-Linien
 
-Eine Version bedient alle unterstützten Host-Linien. Version `0.5.0` ist mit allen rc-Releases der DSH-Linien 0.1.0–0.2.0 getestet — die exakte Whitelist ist `engines.dsh`, verteilt aus der einzelnen Faktenquelle `scripts/hosts.mjs` durch `scripts/sync-hosts.mjs` (Handeingriffe lassen `npm run hosts:check` scheitern):
+Eine Version bedient alle unterstützten Host-Linien. Version `0.5.9` ist mit allen rc-Releases der DSH-Linien 0.1.0–0.2.0 getestet — der deklarierte Bereich ist `engines.dsh`, verteilt aus der einzelnen Faktenquelle `scripts/hosts.mjs` durch `scripts/sync-hosts.mjs` (Handeingriffe lassen `npm run hosts:check` scheitern):
 
 | DSH-Linie | getestete rc-Releases |
 | --- | --- |
@@ -40,7 +40,7 @@ Eine Version bedient alle unterstützten Host-Linien. Version `0.5.0` ist mit al
 dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-Das `latest` der Registry ist die eine Version für jede Linie. Jede Linie hat zudem einen Dist-Tag auf denselben Build — `dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5` und so weiter —, falls du die Linie nennen magst; das Installationsziel ist identisch. Ein Host-Release außerhalb der Tabelle wird von der `engines.dsh`-Whitelist abgelehnt, statt halb kaputt zu mounten.
+Das `latest` der Registry ist die eine Version für jede Linie. Jede Linie hat zudem einen Dist-Tag auf denselben Build — `dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5` und so weiter —, falls du die Linie nennen magst; das Installationsziel ist identisch. Ein Host-Release außerhalb der Tabelle wird von der `engines.dsh`-Bereich abgelehnt, statt halb kaputt zu mounten.
 
 Starten Sie danach das Profil neu — eine laufende Instanz lädt keine neue
 Bundle-Schicht per Hot-Load. Laden Sie dann `http://127.0.0.1:3080` neu.
@@ -132,7 +132,7 @@ ist, richten Sie `DSH_TYPESCRIPT` auf ein bestehendes `typescript`-Modulverzeich
   niemals zur falschen werden.
 - **Snapshot-Felder sind vorstabil.** Die Formen der `sessions`- und
   `workspaces`-Snapshots sind noch nicht stabil — die getesteten Host-Releases sind genau die
-  `engines.dsh`-Whitelist (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-rc.1`). Wenn ein dsh-Upgrade
+  `engines.dsh`-Bereich (`engines.dsh: >=0.1.0-rc.2 <0.3.0-0`). Wenn ein dsh-Upgrade
   sie ändert, sind `src/client/navigate.ts` und `src/client/apply.ts` die
   einzigen Dateien zur Überarbeitung; ein Host ohne beide Umschalt-APIs lässt das Plugin
   träge stehen, statt die Seite fehlschlagen zu lassen.

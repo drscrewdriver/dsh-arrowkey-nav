@@ -20,7 +20,7 @@ immediatamente.
 
 ## Versione e linee DSH
 
-Una sola versione serve tutte le linee host supportate. La versione `0.5.0` è verificata con tutti gli rc delle linee DSH 0.1.0–0.2.0 — la whitelist esatta è `engines.dsh`, distribuita dalla fonte unica `scripts/hosts.mjs` tramite `scripts/sync-hosts.mjs` (una modifica manuale fa fallire `npm run hosts:check`):
+Una sola versione serve tutte le linee host supportate. La versione `0.5.9` è verificata con tutti gli rc delle linee DSH 0.1.0–0.2.0 — l'intervallo dichiarato è `engines.dsh`, distribuita dalla fonte unica `scripts/hosts.mjs` tramite `scripts/sync-hosts.mjs` (una modifica manuale fa fallire `npm run hosts:check`):
 
 | Linea DSH | rc verificati |
 | --- | --- |
@@ -40,7 +40,7 @@ Una sola versione serve tutte le linee host supportate. La versione `0.5.0` è v
 dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-Il `latest` del registry è l'unica versione per tutte le linee. Ogni linea ha anche un dist-tag che punta allo stesso build — `dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5` e via — se preferisci nominare la linea; la destinazione d'installazione è identica. Una release host fuori dalla tabella viene rifiutata dalla whitelist `engines.dsh` invece di montarsi mezzo rotta.
+Il `latest` del registry è l'unica versione per tutte le linee. Ogni linea ha anche un dist-tag che punta allo stesso build — `dsh-arrowkey-nav@dsh-0.2.0`, `dsh-arrowkey-nav@dsh-0.1.5` e via — se preferisci nominare la linea; la destinazione d'installazione è identica. Una release host fuori dalla tabella viene rifiutata dalla intervallo `engines.dsh` invece di montarsi mezzo rotta.
 
 Riavvia poi il profilo — un'istanza in esecuzione non carica a caldo un nuovo
 strato di bundle. Poi ricarica `http://127.0.0.1:3080`.
@@ -130,7 +130,7 @@ punta `DSH_TYPESCRIPT` a una directory di modulo `typescript` esistente.
   diventare quella sbagliata.
 - **I campi degli snapshot sono pre-stabili.** Le forme degli snapshot `sessions`
   e `workspaces` non sono ancora stabilizzate — le versioni dell'host verificate sono esattamente la
-  whitelist `engines.dsh` (`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-rc.1`). Se un aggiornamento di dsh li
+  intervallo `engines.dsh` (`engines.dsh: >=0.1.0-rc.2 <0.3.0-0`). Se un aggiornamento di dsh li
   cambia, `src/client/navigate.ts` e `src/client/apply.ts` sono gli unici file
   da rivedere; un host senza nessuna API di commutazione lascia il plugin inerte invece di far
   fallire la pagina.

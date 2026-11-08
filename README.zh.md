@@ -15,7 +15,7 @@ DSH Web GUI 的方向键导航。不必离开键盘即可切换会话：
 
 ## 版本与 DSH 宿主线
 
-一个版本服务全部受支持的宿主线。`0.5.0` 覆盖 DSH 0.1.0–0.2.0 六条线的全部 rc 版本 —— 精确白名单即 `engines.dsh`，由单一事实源 `scripts/hosts.mjs` 经 `scripts/sync-hosts.mjs` 下发（手改会在 `npm run hosts:check` 处失败）：
+一个版本服务全部受支持的宿主线。`0.5.9` 覆盖 DSH 0.1.0–0.2.0 六条线的全部 rc 版本 —— 声明区间即 `engines.dsh`，由单一事实源 `scripts/hosts.mjs` 经 `scripts/sync-hosts.mjs` 下发（手改会在 `npm run hosts:check` 处失败）：
 
 | DSH 宿主线 | 已验证的 rc 版本 |
 | --- | --- |
@@ -35,7 +35,7 @@ DSH Web GUI 的方向键导航。不必离开键盘即可切换会话：
 dsh plugin --profile web add dsh-arrowkey-nav -w
 ```
 
-registry 的 `latest` 就是服务全部宿主线的唯一版本。每条线也有指向同一构建的 dist-tag（`dsh-arrowkey-nav@dsh-0.2.0`、`dsh-arrowkey-nav@dsh-0.1.5` 等），愿意点名线路也可以 —— 安装目标完全相同。白名单之外的宿主版本会被 `engines.dsh` 拒绝安装，而不是半坏地挂载。
+registry 的 `latest` 就是服务全部宿主线的唯一版本。每条线也有指向同一构建的 dist-tag（`dsh-arrowkey-nav@dsh-0.2.0`、`dsh-arrowkey-nav@dsh-0.1.5` 等），愿意点名线路也可以 —— 安装目标完全相同。区间之外的宿主版本会被 `engines.dsh` 拒绝安装，而不是半坏地挂载。
 
 安装后需重启 profile —— 运行中的实例不会热加载新的 bundle 层。随后刷新 `http://127.0.0.1:3080`。
 
@@ -88,7 +88,7 @@ npm run build       # regenerate lib/client.js after editing src/client
 - **收窄为导轨的侧边栏同样不会滚动**，原因相同：树未被挂载。切换仍然会发生。
 - **「单一列表」模式**没有工作区分区，但 `←`/`→` 仍按控制器的工作区顺序遍历，因此列表看起来可能在各分区之间跳动。
 - **滚动是尽力而为。** 任何查找失败都被吞掉：选中项已经移动，而缺失的行绝不能变成错误的行。
-- **快照字段属于 pre-stable。** `sessions` 与 `workspaces` 的快照形状尚未稳定 —— 已验证的宿主版本即 `engines.dsh` 白名单（`engines.dsh: 0.1.0-rc.2 || 0.1.0-rc.3 || 0.1.0-rc.6 || 0.1.0-rc.7 || 0.1.0-rc.8 || 0.1.1-rc.1 || 0.1.1-rc.2 || 0.1.2-rc.1 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.1.5-rc.3 || 0.1.7-rc.1 || 0.1.7-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-rc.1`）。若 dsh 升级改变了它们，只需回看 `src/client/navigate.ts` 与 `src/client/apply.ts`；宿主连一套切换 API 都不提供时，本插件保持惰性，而不会让页面报错。
+- **快照字段属于 pre-stable。** `sessions` 与 `workspaces` 的快照形状尚未稳定 —— 已验证的宿主版本即 `engines.dsh` 区间（`engines.dsh: >=0.1.0-rc.2 <0.3.0-0`）。若 dsh 升级改变了它们，只需回看 `src/client/navigate.ts` 与 `src/client/apply.ts`；宿主连一套切换 API 都不提供时，本插件保持惰性，而不会让页面报错。
 
 ## 目录结构
 
