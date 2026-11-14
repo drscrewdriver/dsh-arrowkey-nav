@@ -63,8 +63,9 @@ export const peerRange = (() => {
 })();
 
 /**
- * The enumerated whitelist string (`0.1.0-rc.2 || … || 0.2.2-rc.1`), used for
- * `peerDependencies` only — see {@link peerRange} for why the two differ.
+ * The enumerated cell list (`0.1.0-rc.2 || … || 0.2.2-rc.1`) — kept ONLY for the
+ * "tested cells" table in the READMEs and for the compat matrix. Peers and
+ * engines both take {@link peerRange}; see there for why the shapes were unified.
  */
 export const peerEnumeration = supportedHosts.join(' || ');
 
@@ -72,15 +73,11 @@ export const peerEnumeration = supportedHosts.join(' || ');
 export const developmentHost = '0.2.1-rc.5';
 
 /**
- * `@deepseek-ai/dsh-api-session-controller` and
- * `@deepseek-ai/dsh-api-workspace-controller` first shipped with the 0.1.2
- * line — the 0.1.0/0.1.1 generations predate them and resolve the same
- * services through Cordis alone. Those hosts are therefore gated by
- * `engines.dsh` only, and the two controller peers enumerate fewer cells than
- * `supportedHosts`.
+ * 2026-11-14：删除按「包是否存在」拆分 peer 的 controllerRange。
+ * peer 是**宿主版本白名单**——宿主对每个 dsh-* peer 都拿宿主运行时版本去匹配，
+ * 所以给 controller 两个 peer 单独掐掉 0.1.0/0.1.1 等于把这两条线的宿主整体拒载，
+ * 尽管 engines.dsh 写着支持。三个 peer 一律同串 {@link peerRange}。
  */
-const preControllerHosts = Object.freeze(supportedHosts.filter((v) => v.startsWith('0.1.0-') || v.startsWith('0.1.1-')));
-export const controllerRange = supportedHosts.filter((v) => !preControllerHosts.includes(v)).join(' || ');
 
 /**
  * The range each `@deepseek-ai` peer must carry, keyed by package. Peers are
@@ -89,9 +86,9 @@ export const controllerRange = supportedHosts.filter((v) => !preControllerHosts.
  * service.
  */
 export const peerRanges = Object.freeze({
-  '@deepseek-ai/dsh-api-session-controller': controllerRange,
-  '@deepseek-ai/dsh-api-workspace-controller': controllerRange,
-  '@deepseek-ai/dsh-client-ui-workspace': peerEnumeration,
+  '@deepseek-ai/dsh-api-session-controller': peerRange,
+  '@deepseek-ai/dsh-api-workspace-controller': peerRange,
+  '@deepseek-ai/dsh-client-ui-workspace': peerRange,
 });
 
 /**
