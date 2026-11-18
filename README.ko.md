@@ -1,6 +1,6 @@
 # dsh-arrowkey-nav
 
-[English](./README.md) | [简体中文](./README.zh.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Français](./README.fr.md) | [Deutsch](./README.de.md) | [Italiano](./README.it.md) | [Русский](./README.ru.md) | [Español](./README.es.md)
+[English](./README.md) | [简体中文](./README.zh.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Français](./README.fr.md) | [Deutsch](./README.de.md) | [Italiano](./README.it.md) | [Русский](./README.ru.md) | [Español](./README.es.md) | [Português](./README.pt.md)
 
 DSH 웹 GUI를 위한 화살표 키 내비게이션. 키보드에서 손을 떼지 않고 세션을 전환할 수
 있습니다:

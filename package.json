@@ -1,6 +1,6 @@
 {
   "name": "dsh-arrowkey-nav",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public",
@@ -18,6 +18,7 @@
     "./client": {
       "default": "./lib/client.js"
     },
+    "./locale/*.json": "./locale/*.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -35,7 +36,11 @@
     "INSTALL.ko.md",
     "CHANGELOG.md",
     "CHANGELOG.ja.md",
-    "CHANGELOG.ko.md"
+    "CHANGELOG.ko.md",
+    "README.pt.md",
+    "INSTALL.pt.md",
+    "CHANGELOG.pt.md",
+    "locale"
   ],
   "dsh": {
     "client": {

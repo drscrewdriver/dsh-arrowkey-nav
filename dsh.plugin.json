@@ -1,10 +1,11 @@
 {
   "id": "dsh-arrowkey-nav",
   "name": "dsh-arrowkey-nav",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": {
     "en": "Arrow-key navigation for the DSH Web GUI: Up/Down switch sessions inside the current workspace, Left/Right switch workspaces. Identity comes from the client controllers, not the DOM, and arrow keys are yielded back to the composer whenever a draft is being edited.",
-    "zh": "DSH Web GUI 的方向键导航：上/下在当前工作区内切换会话，左/右切换工作区。身份来自客户端控制器而非 DOM；编辑草稿时方向键交还给输入框。"
+    "zh": "DSH Web GUI 的方向键导航：上/下在当前工作区内切换会话，左/右切换工作区。身份来自客户端控制器而非 DOM；编辑草稿时方向键交还给输入框。",
+    "pt": "Navegação com as teclas de seta para a GUI web do DSH: cima/baixo trocam de sessão dentro do espaço de trabalho atual, esquerda/direita trocam de espaço de trabalho. A identidade vem dos controladores de cliente, não do DOM, e as teclas de seta são devolvidas à caixa de redação sempre que um rascunho estiver sendo editado."
   },
   "homepage": "https://github.com/drscrewdriver/dsh-arrowkey-nav",
   "repository": {

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Pfeiltasten-Navigation",
+    "description": "Pfeiltasten-Navigation für die DSH-Web-GUI: Hoch/Runter wechselt die Sitzung innerhalb des aktuellen Arbeitsbereichs, Links/Rechts wechselt den Arbeitsbereich."
+  }
+}

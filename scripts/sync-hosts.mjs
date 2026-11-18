@@ -48,8 +48,8 @@ await managed(
   'dsh.plugin.json 与 hosts.mjs/package.json 不一致；运行 node scripts/sync-hosts.mjs --write',
 );
 
-// 九份 README 各含一个反引号包裹的 engines.dsh 令牌（“快照字段 pre-stable”注）。
-const readmeLanguages = ['', '.zh', '.ja', '.ko', '.fr', '.de', '.it', '.ru', '.es'];
+// 十份 README 各含一个反引号包裹的 engines.dsh 令牌（“快照字段 pre-stable”注）。
+const readmeLanguages = ['', '.zh', '.ja', '.ko', '.fr', '.de', '.it', '.ru', '.es', '.pt'];
 for (const language of readmeLanguages) {
   const url = new URL(`../README${language}.md`, import.meta.url);
   await managed(

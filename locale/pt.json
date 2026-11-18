@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Navegação com teclas de seta",
+    "description": "Navegação com as teclas de seta para a GUI web do DSH: cima/baixo trocam de sessão dentro do espaço de trabalho atual, esquerda/direita trocam de espaço de trabalho."
+  }
+}

@@ -14,6 +14,7 @@ ou des modifications manuelles du manifeste du profil.
 - [Guida all'installazione in italiano](./INSTALL.it.md)
 - [Руководство по установке на русском](./INSTALL.ru.md)
 - [Guía de instalación en español](./INSTALL.es.md)
+- [Guia de instalação em português](./INSTALL.pt.md)
 - [English README](./README.md)
 - [中文 README](./README.zh.md)
 - [日本語 README](./README.ja.md)
@@ -23,6 +24,7 @@ ou des modifications manuelles du manifeste du profil.
 - [README in italiano](./README.it.md)
 - [README на русском](./README.ru.md)
 - [README en español](./README.es.md)
+- [README em português](./README.pt.md)
 - [Changelog](./CHANGELOG.md)
 - [日本語 changelog](./CHANGELOG.ja.md)
 - [한국어 changelog](./CHANGELOG.ko.md)
@@ -31,6 +33,7 @@ ou des modifications manuelles du manifeste du profil.
 - [Changelog in italiano](./CHANGELOG.it.md)
 - [Changelog на русском](./CHANGELOG.ru.md)
 - [Changelog en español](./CHANGELOG.es.md)
+- [Changelog em português](./CHANGELOG.pt.md)
 
 Les espaces réservés de ce guide sont :
 

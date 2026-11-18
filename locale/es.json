@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Navegación con teclas de flecha",
+    "description": "Navegación con las teclas de flecha para la GUI web de DSH: arriba/abajo cambian de sesión dentro del espacio de trabajo actual, izquierda/derecha cambian de espacio de trabajo."
+  }
+}
